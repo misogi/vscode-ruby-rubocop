@@ -36,6 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const fileName = vscode.window.activeTextEditor.document.fileName;
 		// The code you place here will be executed every time your command is executed
 		cp.execFile(path + 'rubocop.bat', [fileName, '--format', 'json'], {cwd: path}, (err, stdout, stderr) => {
+			diag.clear();
 			const rubocop: RubocopOutput = JSON.parse(stdout.toString());
 			console.log(rubocop);
 			console.log(stderr);
