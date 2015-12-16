@@ -17,6 +17,7 @@
 		"Linters"
 	],
 	"activationEvents": [
+		"onLanguage:ruby",
 		"onCommand:ruby.rubocop"
 	],
 	"main": "./out/src/extension",
