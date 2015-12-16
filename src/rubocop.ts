@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import { RubocopOutput } from './rubocopOutput';
+import * as path from 'path';
 
 interface RubocopConfig {
 	executePath: string;
@@ -32,8 +33,12 @@ export class Rubocop {
 		}
 
 		const fileName = document.fileName;
+		let currentPath = vscode.workspace.rootPath;
+		if (!currentPath) {
+			currentPath = path.dirname(fileName);
+		}
 
-		cp.execFile(this.path + this.command, [fileName, '--format', 'json'], {cwd: this.path}, (err, stdout, stderr) => {
+		cp.execFile(this.path + this.command, [fileName, '--format', 'json'], {cwd: currentPath}, (error, stdout, stderr) => {
 			this.diag.clear();
 			const rubocop: RubocopOutput = JSON.parse(stdout.toString());
 			console.log(stderr);
