@@ -1,13 +1,20 @@
 # README
-## This is the README for your extension "ruby-rubocop" 
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
 
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
+Visual Studio Code 上で rubocop を実行します。
 
-### For more information
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+execute rubocop on Visual Studio Code
 
-** Enjoy!**
+# Configuration
+
+Speciry to config ruby.rubocop.executePath
+
+```
+{
+	"ruby.rubocop.executePath": "D:/bin/Ruby22-x64/bin/"
+}
+```
+
+# todo
+
+execute on save
+more configurable command line option (like -R)
