@@ -26,7 +26,7 @@ export class Rubocop {
 	}
 
 	public execute(document: vscode.TextDocument) {
-		if(!this.path || 0 === this.path.length) {
+		if (!this.path || 0 === this.path.length) {
 			vscode.window.showErrorMessage('execute path is empty! please check ruby.rubocop.executePath config');
 			return;
 		}
@@ -56,7 +56,7 @@ export class Rubocop {
 			});
 
 			this.diag.set(entries);
-		}
+		});
 	}
 
 	private severity(sev: string) {

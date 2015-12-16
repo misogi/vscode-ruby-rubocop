@@ -1,9 +1,9 @@
 {
 	"name": "ruby-rubocop",
-	"displayName": "ruby-rubocop",
-	"description": "execute rubocop for code. press F1 and type rubocop",
 	"version": "0.1.0",
 	"publisher": "misogi",
+	"displayName": "ruby-rubocop",
+	"description": "execute rubocop for code. press F1 and type rubocop",
 	"engines": {
 		"vscode": "^0.10.1"
 	},
