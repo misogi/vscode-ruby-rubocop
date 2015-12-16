@@ -27,5 +27,16 @@
 	"devDependencies": {
 		"typescript": "^1.6.2",
 		"vscode": "0.10.x"
+	},
+    "configuration": {
+      "type": "object",
+      "title": "Ruby-Rubocop configuration",
+      "properties": {
+        "ruby.rubocop.executePath": {
+          "type": "string",
+          "default": "",
+          "description": "path of rubocop."
+        }
+	  }
 	}
 }
