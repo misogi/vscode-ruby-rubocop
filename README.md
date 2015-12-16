@@ -1,8 +1,10 @@
-# README
+# Rubocop for Visual Studio Code
 
-This is extension for Visual Studio Code.
+Visual Studio Code でrubocopを実行するエクステンションです。
 
-Visual Studio Code 上で rubocop を実行します。
+[rubocop](https://github.com/bbatsov/rubocop) is code analyzer for ruby.
+
+[ruby rubocop in Code Market Place](https://marketplace.visualstudio.com/items/misogi.ruby-rubocop)
 
 execute rubocop
 - by execute command "Ruby: execute rubocop" (press F1)
@@ -10,16 +12,30 @@ execute rubocop
 
 ![exec on save](./images/onsave.gif)
 
-# Configuration
+# Installation
 
-Speciry to config ruby.rubocop.executePath
+Installation of ruby and rubocop is required.
+
+```
+gem install rubocop
+```
+
+- Type F1
+- execute "Extensions: install extension"
+- type rubocop and execute `ext install ruby-rubocop`
+
+## Configuration
+
+Speciry configuration
 
 ```
 {
 	"ruby.rubocop.executePath": "D:/bin/Ruby22-x64/bin/",
-	"ruby.rubocop.onSave": true // default true
+	"ruby.rubocop.onSave": true
 }
 ```
+
+`onSave` is default `true`
 
 # todo
 
