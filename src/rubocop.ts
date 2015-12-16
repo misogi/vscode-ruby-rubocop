@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
-import cp = require('child_process');
+import * as cp from 'child_process';
 import { RubocopOutput } from './rubocopOutput'
 
 interface RubocopConfig {
-	executePath: string
+	executePath: string;
 	options: string[];
 }
 
+'use strict';
 export class Rubocop {
 	private config: RobocopConfig;
 	private diag: vscode.DiagnosticCollection;
@@ -60,11 +61,11 @@ export class Rubocop {
 
 	private severity(sev: string) {
 		switch (sev) {
-			case "refactor": return vscode.DiagnosticSeverity.Hint;
-			case "convention": return vscode.DiagnosticSeverity.Information;
-			case "warning": return vscode.DiagnosticSeverity.Warning;
-			case "error": return vscode.DiagnosticSeverity.Error;
-			case "fatal": return vscode.DiagnosticSeverity.Error;
+			case 'refactor': return vscode.DiagnosticSeverity.Hint;
+			case 'convention': return vscode.DiagnosticSeverity.Information;
+			case 'warning': return vscode.DiagnosticSeverity.Warning;
+			case 'error': return vscode.DiagnosticSeverity.Error;
+			case 'fatal': return vscode.DiagnosticSeverity.Error;
 			default: return vscode.DiagnosticSeverity.Error;
 		}
 	}
