@@ -1,8 +1,14 @@
 # README
 
+This is extension for Visual Studio Code.
+
 Visual Studio Code 上で rubocop を実行します。
 
-execute rubocop on Visual Studio Code
+execute rubocop
+- by execute command "Ruby: execute rubocop" (press F1)
+- on Saving .rb file
+
+![exec on save](./images/onsave.gif)
 
 # Configuration
 
@@ -18,3 +24,4 @@ Speciry to config ruby.rubocop.executePath
 # todo
 
 - more configurable command line option (like -R)
+- integration with rbenv

@@ -50,8 +50,9 @@ export class Rubocop {
 					const range = new vscode.Range(
 						loc.line - 1, loc.column - 1, loc.line - 1, loc.length + loc.column - 1);
 					const sev = this.severity(offence.severity);
+					const message = `${offence.message} (${offence.severity}:${offence.cop_name})`;
 					const diagnostic = new vscode.Diagnostic(
-						range, offence.message, sev);
+						range, message, sev);
 					diagnostics.push(diagnostic);
 				});
 				entries.push([url, diagnostics]);
