@@ -14,7 +14,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposable);
 
-	vscode.workspace.onDidSaveTextDocument((e: vscode.TextDocument) => {
-		rubocop.execute(e);
-	});
+	if (rubocop.isOnSave) {
+		vscode.workspace.onDidSaveTextDocument((e: vscode.TextDocument) => {
+			rubocop.execute(e);
+		});
+	}
 }

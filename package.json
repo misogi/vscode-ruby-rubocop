@@ -53,6 +53,11 @@
 				"type": "string",
 				"default": "",
 				"description": "execution path of rubocop."
+			},
+			"ruby.rubocop.onSave": {
+				"type": "boolean",
+				"default": true,
+				"description": "execute rubocop on save."
 			}
 		}
 	}

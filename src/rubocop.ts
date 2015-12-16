@@ -14,16 +14,14 @@ export class Rubocop {
 	private diag: vscode.DiagnosticCollection;
 	private path: string;
 	private command: string;
+	private onSave: boolean;
 
 	constructor(diagnostics: vscode.DiagnosticCollection) {
 		this.config = vscode.workspace.getConfiguration('ruby.rubocop');
 		this.diag = diagnostics;
 		this.path = this.config.get('executePath', '');
-		if (process.platform === 'win32') {
-			this.command = 'rubocop.bat';
-		} else {
-			this.command = 'rubocop';
-		}
+		this.command = (process.platform === 'win32') ? 'rubocop.bat' : 'rubocop';
+		this.onSave = this.config.get('onSave', true);
 	}
 
 	public execute(document: vscode.TextDocument): void {
@@ -61,6 +59,10 @@ export class Rubocop {
 
 			this.diag.set(entries);
 		});
+	}
+
+	public get isOnSave(): boolean {
+		return this.onSave;
 	}
 
 	private severity(sev: string): vscode.DiagnosticSeverity {

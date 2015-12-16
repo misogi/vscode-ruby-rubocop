@@ -10,11 +10,11 @@ Speciry to config ruby.rubocop.executePath
 
 ```
 {
-	"ruby.rubocop.executePath": "D:/bin/Ruby22-x64/bin/"
+	"ruby.rubocop.executePath": "D:/bin/Ruby22-x64/bin/",
+	"ruby.rubocop.onSave": true // default true
 }
 ```
 
 # todo
 
-execute on save
-more configurable command line option (like -R)
+- more configurable command line option (like -R)
