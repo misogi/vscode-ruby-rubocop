@@ -1,7 +1,7 @@
 {
 	"name": "ruby-rubocop",
 	"displayName": "ruby-rubocop",
-	"description": "rubocop for code",
+	"description": "execute rubocop for code. press F1 and type rubocop",
 	"version": "0.1.0",
 	"publisher": "misogi",
 	"engines": {
@@ -35,7 +35,7 @@
         "ruby.rubocop.executePath": {
           "type": "string",
           "default": "",
-          "description": "path of rubocop."
+          "description": "execution path of rubocop."
         }
 	  }
 	}
