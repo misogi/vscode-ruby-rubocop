@@ -1,6 +1,6 @@
 {
 	"name": "ruby-rubocop",
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"publisher": "misogi",
 	"displayName": "ruby-rubocop",
 	"description": "execute rubocop for code. press F1 and type rubocop",
@@ -21,6 +21,14 @@
 		"onCommand:ruby.rubocop"
 	],
 	"main": "./out/src/extension",
+	"scripts": {
+		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
+	},
+	"devDependencies": {
+		"typescript": "^1.6.2",
+		"vscode": "0.10.x"
+	},
 	"contributes": {
 		"languages": [
 			{
@@ -35,29 +43,21 @@
 				"command": "ruby.rubocop",
 				"title": "Ruby: execute rubocop"
 			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
-	},
-	"devDependencies": {
-		"typescript": "^1.6.2",
-		"vscode": "0.10.x"
-	},
-	"configuration": {
-		"type": "object",
-		"title": "Ruby-Rubocop configuration",
-		"properties": {
-			"ruby.rubocop.executePath": {
-				"type": "string",
-				"default": "",
-				"description": "execution path of rubocop."
-			},
-			"ruby.rubocop.onSave": {
-				"type": "boolean",
-				"default": true,
-				"description": "execute rubocop on save."
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Ruby-Rubocop configuration",
+			"properties": {
+				"ruby.rubocop.executePath": {
+					"type": "string",
+					"default": "",
+					"description": "execution path of rubocop."
+				},
+				"ruby.rubocop.onSave": {
+					"type": "boolean",
+					"default": true,
+					"description": "execute rubocop on save."
+				}
 			}
 		}
 	}
