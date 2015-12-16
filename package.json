@@ -7,18 +7,34 @@
 	"engines": {
 		"vscode": "^0.10.1"
 	},
+	"icon": "images/rubocop.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/misogi/vscode-ruby-rubocop.git"
+	},
 	"categories": [
-		"Other"
+		"Languages",
+		"Linters"
 	],
 	"activationEvents": [
 		"onCommand:ruby.rubocop"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
-		"commands": [{
-			"command": "ruby.rubocop",
-			"title": "Ruby: execute rubocop"
-		}]
+		"languages": [
+			{
+				"id": "ruby",
+				"extensions": [
+					".rb"
+				]
+			}
+		],
+		"commands": [
+			{
+				"command": "ruby.rubocop",
+				"title": "Ruby: execute rubocop"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
@@ -28,15 +44,15 @@
 		"typescript": "^1.6.2",
 		"vscode": "0.10.x"
 	},
-    "configuration": {
-      "type": "object",
-      "title": "Ruby-Rubocop configuration",
-      "properties": {
-        "ruby.rubocop.executePath": {
-          "type": "string",
-          "default": "",
-          "description": "execution path of rubocop."
-        }
-	  }
+	"configuration": {
+		"type": "object",
+		"title": "Ruby-Rubocop configuration",
+		"properties": {
+			"ruby.rubocop.executePath": {
+				"type": "string",
+				"default": "",
+				"description": "execution path of rubocop."
+			}
+		}
 	}
 }
