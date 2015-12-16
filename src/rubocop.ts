@@ -31,13 +31,12 @@ export class Rubocop {
 			return;
 		}
 
-		const fileName = vscode.window.activeTextEditor.document.fileName;
+		const fileName = document.fileName;
 
 		cp.execFile(this.path + this.command, [fileName, '--format', 'json'], {cwd: this.path}, (err, stdout, stderr) => {
 			this.diag.clear();
 			const rubocop: RubocopOutput = JSON.parse(stdout.toString());
 			console.log(stderr);
-			console.log(err);
 
 			let entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
 			rubocop.files.forEach((file) => {
