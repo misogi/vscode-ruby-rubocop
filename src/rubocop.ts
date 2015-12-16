@@ -25,6 +25,10 @@ export class Rubocop {
 	}
 
 	public execute(document: vscode.TextDocument): void {
+		if (document.languageId !== 'ruby') {
+			return;
+		}
+		
 		if (!this.path || 0 === this.path.length) {
 			vscode.window.showErrorMessage('execute path is empty! please check ruby.rubocop.executePath config');
 			return;

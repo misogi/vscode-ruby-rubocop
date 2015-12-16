@@ -1,6 +1,6 @@
 {
 	"name": "ruby-rubocop",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"publisher": "misogi",
 	"displayName": "ruby-rubocop",
 	"description": "execute rubocop for code. press F1 and type rubocop",
