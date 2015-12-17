@@ -28,9 +28,9 @@ export class Rubocop {
 		if (document.languageId !== 'ruby') {
 			return;
 		}
-		
+
 		if (!this.path || 0 === this.path.length) {
-			vscode.window.showErrorMessage('execute path is empty! please check ruby.rubocop.executePath config');
+			vscode.window.showWarningMessage('execute path is empty! please check ruby.rubocop.executePath config');
 			return;
 		}
 
@@ -40,7 +40,13 @@ export class Rubocop {
 			currentPath = path.dirname(fileName);
 		}
 
-		cp.execFile(this.path + this.command, [fileName, '--format', 'json'], {cwd: currentPath}, (error, stdout, stderr) => {
+		const executeFile = this.path + this.command;
+		cp.execFile(executeFile, [fileName, '--format', 'json'], {cwd: currentPath}, (error, stdout, stderr) => {
+			if ((<any>error).code === 'ENOENT') {
+				vscode.window.showWarningMessage(`${executeFile} is not executable`);
+				return;
+			}
+
 			this.diag.clear();
 			const rubocop: RubocopOutput = JSON.parse(stdout.toString());
 			console.log(stderr);
