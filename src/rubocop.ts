@@ -42,7 +42,7 @@ export class Rubocop {
 
 		const executeFile = this.path + this.command;
 		cp.execFile(executeFile, [fileName, '--format', 'json'], {cwd: currentPath}, (error, stdout, stderr) => {
-			if ((<any>error).code === 'ENOENT') {
+			if (error && (<any>error).code === 'ENOENT') {
 				vscode.window.showWarningMessage(`${executeFile} is not executable`);
 				return;
 			}
