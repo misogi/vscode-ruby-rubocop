@@ -30,12 +30,13 @@ Speciry configuration
 
 ```
 {
+	//  or "ruby.rubocop.executePath": "/Users/you/.rbenv/shims/"
 	"ruby.rubocop.executePath": "D:/bin/Ruby22-x64/bin/",
+
+	// default true
 	"ruby.rubocop.onSave": true
 }
 ```
-
-`onSave` is default `true`
 
 # todo
 
