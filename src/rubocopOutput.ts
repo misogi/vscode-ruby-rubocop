@@ -10,7 +10,7 @@ interface RubocopLocation {
 	length: number;
 }
 
-interface RubocopOffense {
+export interface RubocopOffense {
 	severity: string;
 	message: string;
 	cop_name: string;
@@ -18,7 +18,7 @@ interface RubocopOffense {
 	location: RubocopLocation;
 }
 
-interface RubocopFile {
+export interface RubocopFile {
 	path: string;
 	offenses: Array<RubocopOffense>;
 }

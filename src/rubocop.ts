@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as cp from 'child_process';
-import { RubocopOutput } from './rubocopOutput';
+import { RubocopOutput, RubocopFile, RubocopOffense } from './rubocopOutput';
 import * as path from 'path';
 
 interface RubocopConfig {
@@ -28,9 +28,9 @@ export class Rubocop {
 		if (document.languageId !== 'ruby') {
 			return;
 		}
-		
+
 		if (!this.path || 0 === this.path.length) {
-			vscode.window.showErrorMessage('execute path is empty! please check ruby.rubocop.executePath config');
+			vscode.window.showWarningMessage('execute path is empty! please check ruby.rubocop.executePath config');
 			return;
 		}
 
@@ -40,16 +40,23 @@ export class Rubocop {
 			currentPath = path.dirname(fileName);
 		}
 
-		cp.execFile(this.path + this.command, [fileName, '--format', 'json'], {cwd: currentPath}, (error, stdout, stderr) => {
+		const executeFile = this.path + this.command;
+
+		let onDidExec = (error: Error, stdout: Buffer, stderr: Buffer) => {
+			if (error && (<any>error).code === 'ENOENT') {
+				vscode.window.showWarningMessage(`${executeFile} is not executable`);
+				return;
+			}
+
 			this.diag.clear();
 			const rubocop: RubocopOutput = JSON.parse(stdout.toString());
 			console.log(stderr);
 
 			let entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
-			rubocop.files.forEach((file) => {
+			rubocop.files.forEach((file: RubocopFile) => {
 				let diagnostics = [];
 				const url = vscode.Uri.file(fileName);
-				file.offenses.forEach((offence) => {
+				file.offenses.forEach((offence: RubocopOffense) => {
 					const loc = offence.location;
 					const range = new vscode.Range(
 						loc.line - 1, loc.column - 1, loc.line - 1, loc.length + loc.column - 1);
@@ -63,7 +70,9 @@ export class Rubocop {
 			});
 
 			this.diag.set(entries);
-		});
+		};
+
+		cp.execFile(executeFile, [fileName, '--format', 'json'], {cwd: currentPath}, onDidExec);
 	}
 
 	public get isOnSave(): boolean {
