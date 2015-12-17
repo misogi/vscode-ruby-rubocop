@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { Rubocop } from './rubocop';
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext): void {
 	'use strict';
 
 	const diag = vscode.languages.createDiagnosticCollection('ruby');
