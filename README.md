@@ -26,7 +26,7 @@ gem install rubocop
 
 ## Configuration
 
-Speciry configuration
+Specify configuration
 
 ```
 {
