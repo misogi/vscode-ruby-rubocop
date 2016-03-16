@@ -46,7 +46,7 @@ export class Rubocop {
 			if (error && (<any>error).code === 'ENOENT') {
 				vscode.window.showWarningMessage(`${executeFile} is not executable`);
 				return;
-			} else if (error && (<any>error).code !== 0) {
+			} else if (error && (<any>error).code === 127) {
                 let errorMessage = stderr.toString();
 				vscode.window.showWarningMessage(errorMessage);
 			    console.log(error.message);
