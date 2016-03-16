@@ -57,6 +57,7 @@ export class Rubocop {
             let out = stdout.toString();
 			const rubocop: RubocopOutput = JSON.parse(out || 'null');
             if (rubocop === null) {
+				vscode.window.showWarningMessage('output by Rubocop is null');
                 return;
             }
             
