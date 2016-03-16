@@ -46,12 +46,20 @@ export class Rubocop {
 			if (error && (<any>error).code === 'ENOENT') {
 				vscode.window.showWarningMessage(`${executeFile} is not executable`);
 				return;
-			}
+			} else if (error && (<any>error).code === 127) {
+                let errorMessage = stderr.toString();
+				vscode.window.showWarningMessage(errorMessage);
+			    console.log(error.message);
+				return;
+            }
 
 			this.diag.clear();
-			const rubocop: RubocopOutput = JSON.parse(stdout.toString());
-			console.log(stderr);
-
+            let out = stdout.toString();
+			const rubocop: RubocopOutput = JSON.parse(out || 'null');
+            if (rubocop === null) {
+                return;
+            }
+            
 			let entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
 			rubocop.files.forEach((file: RubocopFile) => {
 				let diagnostics = [];
