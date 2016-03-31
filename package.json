@@ -1,6 +1,6 @@
 {
 	"name": "ruby-rubocop",
-	"version": "0.1.11",
+	"version": "0.1.12",
 	"publisher": "misogi",
 	"displayName": "ruby-rubocop",
 	"description": "execute rubocop for current Ruby code.",
@@ -53,6 +53,11 @@
 					"default": "",
 					"description": "execution path of rubocop."
 				},
+        "ruby.rubocop.configFilePath": {
+          "type": "string",
+          "default": null,
+          "description": "Filepath to the configuration file for Rubocop"
+        },
 				"ruby.rubocop.onSave": {
 					"type": "boolean",
 					"default": true,
