@@ -1,69 +1,73 @@
 {
-	"name": "ruby-rubocop",
-	"version": "0.1.12",
-	"publisher": "misogi",
-	"displayName": "ruby-rubocop",
-	"description": "execute rubocop for current Ruby code.",
-	"engines": {
-		"vscode": "^0.10.1"
-	},
-	"icon": "images/rubocop.png",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/misogi/vscode-ruby-rubocop.git"
-	},
-	"categories": [
-		"Languages",
-		"Linters"
-	],
-	"activationEvents": [
-		"onLanguage:ruby",
-		"onCommand:ruby.rubocop"
-	],
-	"main": "./out/src/extension",
-	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
-	},
-	"devDependencies": {
-		"typescript": "^1.6.2",
-		"vscode": "0.10.x"
-	},
-	"contributes": {
-		"languages": [
-			{
-				"id": "ruby",
-				"extensions": [
-					".rb"
-				]
-			}
-		],
-		"commands": [
-			{
-				"command": "ruby.rubocop",
-				"title": "Ruby: execute rubocop"
-			}
-		],
-		"configuration": {
-			"type": "object",
-			"title": "Ruby-Rubocop configuration",
-			"properties": {
-				"ruby.rubocop.executePath": {
-					"type": "string",
-					"default": "",
-					"description": "execution path of rubocop."
-				},
+  "name": "ruby-rubocop",
+  "version": "0.1.12",
+  "publisher": "misogi",
+  "displayName": "ruby-rubocop",
+  "description": "execute rubocop for current Ruby code.",
+  "engines": {
+    "vscode": "^0.10.1"
+  },
+  "icon": "images/rubocop.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/misogi/vscode-ruby-rubocop.git"
+  },
+  "categories": [
+    "Languages",
+    "Linters"
+  ],
+  "activationEvents": [
+    "onLanguage:ruby",
+    "onCommand:ruby.rubocop"
+  ],
+  "main": "./out/src/extension",
+  "scripts": {
+    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
+  },
+  "devDependencies": {
+    "typescript": "^1.6.2",
+    "vscode": "0.10.x"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "ruby",
+        "extensions": [
+          ".rb"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "ruby.rubocop",
+        "title": "Ruby: execute rubocop"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Ruby-Rubocop configuration",
+      "properties": {
+        "ruby.rubocop.executePath": {
+          "type": "string",
+          "default": "",
+          "description": "execution path of rubocop."
+        },
         "ruby.rubocop.configFilePath": {
           "type": "string",
           "default": null,
           "description": "Filepath to the configuration file for Rubocop"
         },
-				"ruby.rubocop.onSave": {
-					"type": "boolean",
-					"default": true,
-					"description": "execute rubocop on save."
-				}
-			}
-		}
-	}
+        "ruby.rubocop.onSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "execute rubocop on save."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "tslint": "3.6.0",
+    "typescript": "1.8.9"
+  }
 }
