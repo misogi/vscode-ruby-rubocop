@@ -45,3 +45,11 @@ Specify configuration
 
 - more configurable command line option (like -R)
 - integration with rbenv
+
+# development
+
+Don't forget npm install
+
+Formatting code using typescript-formatter
+https://github.com/vvakame/typescript-formatter
+    tsfmt -r src/*
