@@ -34,7 +34,7 @@ Specify configuration
   "ruby.rubocop.executePath": "D:/bin/Ruby22-x64/bin/",
 
   // If not specified, it assumes a null value by default.
-  "ruby.rubocop.configFilePath": "/path/to/config/file",
+  "ruby.rubocop.configFilePath": "/path/to/config/.rubocop.yml",
 
   // default true
   "ruby.rubocop.onSave": true
