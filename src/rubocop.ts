@@ -5,6 +5,7 @@ import * as path from 'path';
 
 interface RubocopConfig {
 	executePath: string;
+  configFilePath: string;
 	options: string[];
 }
 
@@ -14,12 +15,14 @@ export class Rubocop {
 	private diag: vscode.DiagnosticCollection;
 	private path: string;
 	private command: string;
+  private configPath: string:
 	private onSave: boolean;
 
 	constructor(diagnostics: vscode.DiagnosticCollection) {
 		this.config = vscode.workspace.getConfiguration('ruby.rubocop');
 		this.diag = diagnostics;
 		this.path = this.config.get('executePath', '');
+    this.configPath = this.config.get('configFilePath', null);
 		this.command = (process.platform === 'win32') ? 'rubocop.bat' : 'rubocop';
 		this.onSave = this.config.get('onSave', true);
 	}
@@ -60,7 +63,7 @@ export class Rubocop {
 				vscode.window.showWarningMessage('output by Rubocop is null');
                 return;
             }
-            
+
 			let entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
 			rubocop.files.forEach((file: RubocopFile) => {
 				let diagnostics = [];
@@ -81,7 +84,24 @@ export class Rubocop {
 			this.diag.set(entries);
 		};
 
-		cp.execFile(executeFile, [fileName, '--format', 'json'], {cwd: currentPath}, onDidExec);
+    // Extract arguments to let variable.
+    let command_arguments = [fileName, '--format', 'json'];
+
+    // If configPath is defined, try push the options to the rubocop executable.
+    if (this.configPath !== null) {
+      //If configPath is an empty string, show an error message and exit.
+      if (this.configPath.length === 0) {
+        let message = 'Config setting has been specified with an empty value. ';
+        message += 'Please, use a correct configuration filepath';
+
+        vscode.window.showErrorMessage(message);
+        return;
+      } else {
+        command_arguments.push('--config') && command_arguments.push(this.configPath);
+      }
+    }
+
+		cp.execFile(executeFile, command_arguments, { cwd: currentPath }, onDidExec);
 	}
 
 	public get isOnSave(): boolean {
