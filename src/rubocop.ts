@@ -9,8 +9,8 @@ interface RubocopConfig {
     options: string[];
 }
 
-'use strict';
 export class Rubocop {
+    'use strict';
     private config: vscode.WorkspaceConfiguration;
     private diag: vscode.DiagnosticCollection;
     private path: string;
@@ -93,7 +93,7 @@ export class Rubocop {
         return this.onSave;
     }
 
-    // extract argument to array
+    // extract argument to an array
     private commandArguments(fileName: string): Array<string> {
         let commandArguments = [fileName, '--format', 'json'];
 
