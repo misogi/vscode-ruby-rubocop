@@ -50,6 +50,5 @@ Specify configuration
 
 Don't forget npm install
 
-Formatting code using typescript-formatter
-https://github.com/vvakame/typescript-formatter
+Formatting code using [vvakame/typescript-formatter](https://github.com/vvakame/typescript-formatter)
     tsfmt -r src/*
