@@ -20,7 +20,7 @@ Installation of ruby and rubocop is required.
 gem install rubocop
 ```
 
-- Type F1
+- Type F1 (or Command + Shift + P)
 - execute "Extensions: install extension"
 - type rubocop and execute `ext install ruby-rubocop`
 
