@@ -1,11 +1,11 @@
 {
   "name": "ruby-rubocop",
-  "version": "0.1.12",
+  "version": "0.2.0",
   "publisher": "misogi",
   "displayName": "ruby-rubocop",
   "description": "execute rubocop for current Ruby code.",
   "engines": {
-    "vscode": "^0.10.1"
+    "vscode": "^1.0.0"
   },
   "icon": "images/rubocop.png",
   "repository": {
@@ -54,7 +54,7 @@
         },
         "ruby.rubocop.configFilePath": {
           "type": "string",
-          "default": null,
+          "default": "",
           "description": "Filepath to the configuration file for Rubocop"
         },
         "ruby.rubocop.onSave": {
@@ -66,7 +66,7 @@
     }
   },
   "dependencies": {
-    "tslint": "3.6.0",
-    "typescript": "1.8.9"
+    "typescript": "^1.8.10",
+    "vscode": "^0.10.7"
   }
 }

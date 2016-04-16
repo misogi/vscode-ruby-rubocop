@@ -19,12 +19,9 @@ export class Rubocop {
     private onSave: boolean;
 
     constructor(diagnostics: vscode.DiagnosticCollection) {
-        this.config = vscode.workspace.getConfiguration('ruby.rubocop');
         this.diag = diagnostics;
-        this.path = this.config.get('executePath', '');
-        this.configPath = this.config.get('configFilePath', undefined);
         this.command = (process.platform === 'win32') ? 'rubocop.bat' : 'rubocop';
-        this.onSave = this.config.get('onSave', true);
+        this.resetConfig();
     }
 
     public execute(document: vscode.TextDocument): void {
@@ -32,6 +29,7 @@ export class Rubocop {
             return;
         }
 
+        this.resetConfig();
         if (!this.path || 0 === this.path.length) {
             vscode.window.showWarningMessage('execute path is empty! please check ruby.rubocop.executePath config');
             return;
@@ -93,20 +91,19 @@ export class Rubocop {
         return this.onSave;
     }
 
+    private resetConfig(): void {
+        const conf = vscode.workspace.getConfiguration('ruby.rubocop');
+        this.path = conf.get('executePath', '');
+        this.configPath = conf.get('configFilePath', '');
+        this.onSave = conf.get('onSave', true);
+    }
+
     // extract argument to an array
     private commandArguments(fileName: string): Array<string> {
         let commandArguments = [fileName, '--format', 'json'];
 
-        if (this.configPath !== undefined) {
-            if (this.configPath.length === 0) {
-                let message = 'Config setting has been specified with an empty value. ';
-                message += 'Please, use a correct configuration filepath';
-
-                vscode.window.showErrorMessage(message);
-                return;
-            } else {
-                commandArguments.push('--config') && commandArguments.push(this.configPath);
-            }
+        if (this.configPath !== "") {
+            commandArguments.push('--config') && commandArguments.push(this.configPath);
         }
 
         return commandArguments;
