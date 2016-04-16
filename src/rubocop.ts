@@ -97,16 +97,8 @@ export class Rubocop {
     private commandArguments(fileName: string): Array<string> {
         let commandArguments = [fileName, '--format', 'json'];
 
-        if (this.configPath !== undefined) {
-            if (this.configPath.length === 0) {
-                let message = 'Config setting has been specified with an empty value. ';
-                message += 'Please, use a correct configuration filepath';
-
-                vscode.window.showErrorMessage(message);
-                return;
-            } else {
-                commandArguments.push('--config') && commandArguments.push(this.configPath);
-            }
+        if (this.configPath !== "") {
+            commandArguments.push('--config') && commandArguments.push(this.configPath);
         }
 
         return commandArguments;
