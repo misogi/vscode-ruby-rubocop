@@ -26,7 +26,7 @@ gem install rubocop
 
 ## Configuration
 
-Specify configuration
+Specify configuration (via navigating to `File > Preferences > Workspace Settings` and editing file `settings.json):`
 
 ```javascript
 {
