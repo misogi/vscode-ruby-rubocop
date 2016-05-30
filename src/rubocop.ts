@@ -55,8 +55,20 @@ export class Rubocop {
             }
 
             this.diag.clear();
-            let out = stdout.toString();
-            const rubocop: RubocopOutput = JSON.parse(out || 'undefined');
+            let output: string = stdout.toString();
+            let rubocop: RubocopOutput;
+            try {
+                rubocop = JSON.parse(output);
+            } catch (e) {
+                if (e instanceof SyntaxError) {
+                    let regex = /[\r\n \t]/g;
+                    let message = output.replace(regex, ' ');
+                    let errorMessage = `Error on parsing output (It might non-JSON output) : "${message}"`;
+                    vscode.window.showWarningMessage(errorMessage);
+                    return;
+                }
+            }
+
             if (rubocop === undefined) {
                 let errorMessage = stderr.toString();
                 vscode.window.showWarningMessage(errorMessage);
