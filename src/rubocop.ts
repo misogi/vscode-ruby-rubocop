@@ -11,8 +11,6 @@ interface RubocopConfig {
 }
 
 export class Rubocop {
-    'use strict';
-    private config: vscode.WorkspaceConfiguration;
     private diag: vscode.DiagnosticCollection;
     private path: string;
     private command: string;
@@ -119,8 +117,9 @@ export class Rubocop {
     private commandArguments(fileName: string): Array<string> {
         let commandArguments = [fileName, '--format', 'json'];
 
-        if (this.configPath !== "") {
-            commandArguments.push('--config') && commandArguments.push(this.configPath);
+        if (this.configPath !== '') {
+            const config = ['--config', this.configPath];
+            commandArguments = commandArguments.concat(config);
         }
 
         return commandArguments;
@@ -138,15 +137,20 @@ export class Rubocop {
     }
 
     private autodetectExecutePath(): string {
-        if (process.env['PATH']) {
-            let pathparts = process.env['PATH'].split(path.delimiter);
-            for (let i = 0; i < pathparts.length; i++) {
-                let binpath = path.join(pathparts[i], this.command);
-                if (fs.existsSync(binpath)) {
-                    return pathparts[i] + path.sep;
-                }
+        const key: string = 'PATH';
+        let paths = process.env[key];
+        if (!paths) {
+            return '';
+        }
+
+        let pathparts = process.env[key].split(path.delimiter);
+        for (let i = 0; i < pathparts.length; i++) {
+            let binpath = path.join(pathparts[i], this.command);
+            if (fs.existsSync(binpath)) {
+                return pathparts[i] + path.sep;
             }
         }
+
         return '';
     }
 
