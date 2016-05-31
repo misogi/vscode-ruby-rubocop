@@ -1,6 +1,6 @@
 {
   "name": "ruby-rubocop",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "publisher": "misogi",
   "displayName": "ruby-rubocop",
   "description": "execute rubocop for current Ruby code.",
