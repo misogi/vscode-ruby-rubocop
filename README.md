@@ -31,6 +31,7 @@ Specify configuration (via navigating to `File > Preferences > Workspace Setting
 ```javascript
 {
   //  or "ruby.rubocop.executePath": "/Users/you/.rbenv/shims/"
+  // if not specified searches for 'rubocop' executable available on PATH
   "ruby.rubocop.executePath": "D:/bin/Ruby22-x64/bin/",
 
   // If not specified, it assumes a null value by default.

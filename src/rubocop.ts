@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import { RubocopOutput, RubocopFile, RubocopOffense } from './rubocopOutput';
 import * as path from 'path';
+import * as fs from 'fs';
 
 interface RubocopConfig {
     executePath: string;
@@ -106,6 +107,10 @@ export class Rubocop {
     private resetConfig(): void {
         const conf = vscode.workspace.getConfiguration('ruby.rubocop');
         this.path = conf.get('executePath', '');
+        // try to autodetect the path (if it's not specified explicitly)
+        if (!this.path || 0 === this.path.length) {
+            this.path = this.autodetectExecutePath();
+        }
         this.configPath = conf.get('configFilePath', '');
         this.onSave = conf.get('onSave', true);
     }
@@ -131,4 +136,18 @@ export class Rubocop {
             default: return vscode.DiagnosticSeverity.Error;
         }
     }
+
+    private autodetectExecutePath(): string {
+        if (process.env['PATH']) {
+            let pathparts = process.env['PATH'].split(path.delimiter);
+            for (let i = 0; i < pathparts.length; i++) {
+                let binpath = path.join(pathparts[i], this.command);
+                if (fs.existsSync(binpath)) {
+                    return pathparts[i] + path.sep;
+                }
+            }
+        }
+        return '';
+    }
+
 }
