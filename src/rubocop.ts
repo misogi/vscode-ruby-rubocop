@@ -143,7 +143,7 @@ export class Rubocop {
             return '';
         }
 
-        let pathparts = process.env[key].split(path.delimiter);
+        let pathparts = paths.split(path.delimiter);
         for (let i = 0; i < pathparts.length; i++) {
             let binpath = path.join(pathparts[i], this.command);
             if (fs.existsSync(binpath)) {
