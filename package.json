@@ -40,7 +40,17 @@
     "commands": [
       {
         "command": "ruby.rubocop",
-        "title": "Ruby: execute rubocop"
+        "title": "Ruby: rubocop"
+      },
+      {
+        "command": "ruby.rubocopAutocorrect",
+        "title": "Ruby: rubocop autocorrect"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "shift+ctrl+r",
+        "command": "ruby.rubocopAutocorrect"
       }
     ],
     "configuration": {
