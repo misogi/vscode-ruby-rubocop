@@ -102,6 +102,22 @@ export class Rubocop {
         return this.onSave;
     }
 
+    // extract argument to an array
+    protected commandArguments(fileName: string): Array<string> {
+        let commandArguments = [fileName, '--format', 'json'];
+
+        if (this.configPath !== '') {
+            if (fs.existsSync(this.configPath)) {
+                const config = ['--config', this.configPath];
+                commandArguments = commandArguments.concat(config);
+            } else {
+                vscode.window.showWarningMessage(`${this.configPath} file does not exist. Ignoring...`);
+            }
+        }
+
+        return commandArguments;
+    }
+
     private resetConfig(): void {
         const conf = vscode.workspace.getConfiguration('ruby.rubocop');
         this.path = conf.get('executePath', '');
@@ -111,18 +127,6 @@ export class Rubocop {
         }
         this.configPath = conf.get('configFilePath', '');
         this.onSave = conf.get('onSave', true);
-    }
-
-    // extract argument to an array
-    private commandArguments(fileName: string): Array<string> {
-        let commandArguments = [fileName, '--format', 'json'];
-
-        if (this.configPath !== '') {
-            const config = ['--config', this.configPath];
-            commandArguments = commandArguments.concat(config);
-        }
-
-        return commandArguments;
     }
 
     private severity(sev: string): vscode.DiagnosticSeverity {
