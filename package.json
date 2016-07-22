@@ -22,11 +22,9 @@
   ],
   "main": "./out/src/extension",
   "scripts": {
-    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
-  },
-  "devDependencies": {
-    "vscode": "0.10.x"
+        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "contributes": {
     "languages": [
@@ -78,6 +76,6 @@
   },
   "dependencies": {
     "typescript": "^1.8.10",
-    "vscode": "^0.10.7"
+    "vscode": "^0.11.14"
   }
 }

@@ -1,3 +1,4 @@
+
 import * as vscode from 'vscode';
 import { Rubocop } from './rubocop';
 import { RubocopAutocorrect } from './rubocopAutocorrect';
