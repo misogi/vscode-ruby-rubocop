@@ -40,17 +40,18 @@
     "commands": [
       {
         "command": "ruby.rubocop",
-        "title": "Ruby: rubocop"
+        "title": "Ruby: lint by rubocop"
       },
       {
         "command": "ruby.rubocopAutocorrect",
-        "title": "Ruby: rubocop autocorrect"
+        "title": "Ruby: autocorrect by rubocop"
       }
     ],
     "keybindings": [
       {
         "key": "shift+ctrl+r",
-        "command": "ruby.rubocopAutocorrect"
+        "command": "ruby.rubocopAutocorrect",
+        "when": "editorLangId == 'ruby'"
       }
     ],
     "configuration": {
