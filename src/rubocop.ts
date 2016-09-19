@@ -3,6 +3,7 @@ import * as cp from 'child_process';
 import { RubocopOutput, RubocopFile, RubocopOffense } from './rubocopOutput';
 import * as path from 'path';
 import * as fs from 'fs';
+import {ChildProcess} from 'child_process';
 
 interface RubocopConfig {
     executePath: string;
@@ -23,7 +24,7 @@ export class Rubocop {
         this.resetConfig();
     }
 
-    public execute(document: vscode.TextDocument): void {
+    public execute(document: vscode.TextDocument): ChildProcess {
         if (document.languageId !== 'ruby') {
             return;
         }
@@ -95,7 +96,7 @@ export class Rubocop {
         };
 
         let args = this.commandArguments(fileName);
-        cp.execFile(executeFile, args, { cwd: currentPath }, onDidExec);
+        return cp.execFile(executeFile, args, { cwd: currentPath }, onDidExec);
     }
 
     public get isOnSave(): boolean {
