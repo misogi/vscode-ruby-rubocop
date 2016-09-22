@@ -2,15 +2,19 @@
 
 Visual Studio Code でrubocopを実行するエクステンションです。
 
+This extension provides interfaces to rubocop for vscode.
+
 [rubocop](https://github.com/bbatsov/rubocop) is code analyzer for ruby.
 
 [ruby rubocop in Code Market Place](https://marketplace.visualstudio.com/items/misogi.ruby-rubocop)
 
-execute rubocop
-- by execute command "Ruby: execute rubocop" (press F1)
-- on Saving .rb file
-
 ![exec on save](./images/onsave.gif)
+
+## features
+
+- lint by execute command "Ruby: lint by rubocop" (cmd+shift+p and type command)
+- auto invoke when saving file
+- auto correct command "Ruby: autocorrect by rubocop"
 
 # Installation
 
@@ -23,6 +27,10 @@ gem install rubocop
 - Type F1 (or Command + Shift + P)
 - execute "Extensions: install extension"
 - type rubocop and execute `ext install ruby-rubocop`
+
+# ChangeLog
+
+[ChangeLog](CHANGELOG.md)
 
 ## Configuration
 
@@ -42,12 +50,22 @@ Specify configuration (via navigating to `File > Preferences > Workspace Setting
 }
 ```
 
+### Keybindings
+
+You can change keybinding (via editing `keybindings.json`)
+
+```javascript
+{ "key": "ctrl+alt+l",          "command": "ruby.rubocopAutocorrect",
+                                "when": "editorLangId == 'ruby'" }
+```
+
 # todo
 
 - more configurable command line option (like -R)
 - integration with rbenv
+- testing & CI support
 
-# development
+# Contribute with this extension
 
 Don't forget npm install
 
