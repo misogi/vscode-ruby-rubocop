@@ -43,7 +43,7 @@ export class Rubocop {
 
         const executeFile = this.path + this.command;
 
-        let onDidExec = (error: Error, stdout: Buffer, stderr: Buffer) => {
+        let onDidExec = (error: Error, stdout: string, stderr: string) => {
             if (error && (<any>error).code === 'ENOENT') {
                 vscode.window.showWarningMessage(`${executeFile} is not executable`);
                 return;
