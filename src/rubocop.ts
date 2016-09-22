@@ -3,7 +3,7 @@ import * as cp from 'child_process';
 import { RubocopOutput, RubocopFile, RubocopOffense } from './rubocopOutput';
 import * as path from 'path';
 import * as fs from 'fs';
-import {ChildProcess} from 'child_process';
+import { ChildProcess } from 'child_process';
 
 interface RubocopConfig {
     executePath: string;

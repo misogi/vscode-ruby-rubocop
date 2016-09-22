@@ -16,6 +16,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
     vscode.commands.registerCommand('ruby.rubocopAutocorrect', () => {
         const document = vscode.window.activeTextEditor.document;
+        if (document.languageId !== 'ruby') {
+            return;
+        }
+
         document.save().then(() => {
             rubocopAutocorrect.execute(document)
                 .addListener('close', () => rubocop.execute(document));
