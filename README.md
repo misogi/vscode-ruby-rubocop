@@ -71,8 +71,6 @@ Use yarn
 
     yarn install
 
-Don't forget npm install
-
 Formatting code using [vvakame/typescript-formatter](https://github.com/vvakame/typescript-formatter)
 
     tsfmt -r src/*
