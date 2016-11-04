@@ -75,10 +75,10 @@
     }
   },
   "devDependencies": {
+    "@types/mocha": "^2.2.32",
+    "@types/node": "^6.0.40",
     "typescript": "^2.0.7",
     "typescript-formatter": "^4.0.0",
-    "vscode": "^1.0.3",
-    "@types/node": "^6.0.40",
-    "@types/mocha": "^2.2.32"
+    "vscode": "^1.0.3"
   }
 }
