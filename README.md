@@ -67,6 +67,10 @@ You can change keybinding (via editing `keybindings.json`)
 
 # Contribute with this extension
 
+Use yarn
+
+    yarn install
+
 Don't forget npm install
 
 Formatting code using [vvakame/typescript-formatter](https://github.com/vvakame/typescript-formatter)
