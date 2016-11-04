@@ -5,7 +5,7 @@
   "displayName": "ruby-rubocop",
   "description": "execute rubocop for current Ruby code.",
   "engines": {
-    "vscode": "^1.0.0"
+    "vscode": "^1.5.0"
   },
   "icon": "images/rubocop.png",
   "repository": {
@@ -22,8 +22,8 @@
   ],
   "main": "./out/src/extension",
   "scripts": {
-    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "contributes": {
@@ -77,6 +77,8 @@
   "devDependencies": {
     "typescript": "^2.0.7",
     "typescript-formatter": "^4.0.0",
-    "vscode": "^1.0.3"
+    "vscode": "^1.0.3",
+    "@types/node": "^6.0.40",
+    "@types/mocha": "^2.2.32"
   }
 }

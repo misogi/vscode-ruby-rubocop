@@ -1,3 +1,11 @@
+# 0.3.2
+
+- execute on save
+
+# 0.3.1
+
+- Rubocop saves the file before correcting it and runs checks again
+
 # 0.3.0
 
 - Add auto correct command
