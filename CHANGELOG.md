@@ -1,6 +1,6 @@
 # 0.3.2
 
-- execute on save
+- execute on open
 
 # 0.3.1
 
