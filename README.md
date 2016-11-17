@@ -38,7 +38,7 @@ Specify configuration (via navigating to `File > Preferences > Workspace Setting
 
 ```javascript
 {
-  // If not specified searches for 'rubocop' executable available on PATH (recommended)
+  // If not specified searches for 'rubocop' executable available on PATH (default and recommended)
   "ruby.rubocop.executePath": "",
 
   // You can use specific path
