@@ -1,7 +1,7 @@
 # 0.3.3
 
 - output error when stderr presented
-- show specific error message for empty output (for debug)
+- show specific error message for empty output (to identify problem)
 
 # 0.3.2
 

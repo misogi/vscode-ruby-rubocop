@@ -13,6 +13,7 @@ This extension provides interfaces to rubocop for vscode.
 ## problems
 
 This extention may have a plobrem when rvm or chruby environment.
+We recommend [vscode-ruby](https://marketplace.visualstudio.com/items?itemName=rebornix.Ruby). It can also lint ruby code.
 
 ## features
 
