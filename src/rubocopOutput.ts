@@ -1,3 +1,4 @@
+// output of rubocop JSON format
 interface RubocopSummary {
     offence_count: number;
     target_file_count: number;

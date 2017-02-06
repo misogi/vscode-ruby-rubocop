@@ -1,5 +1,4 @@
 out
 node_modules
 src/*.js
-.vscode/
 npm-debug.log.*
