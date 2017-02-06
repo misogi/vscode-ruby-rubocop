@@ -14,18 +14,6 @@
 				"${workspaceRoot}/out/**/*.js"
 			],
 			"preLaunchTask": "npm"
-		},
-		{
-			"name": "Launch Extension",
-			"type": "extensionHost",
-			"request": "launch",
-			// path to VSCode executable
-			"runtimeExecutable": "${execPath}",
-			"args": [ "--extensionDevelopmentPath=${workspaceRoot}" ],
-			"stopOnEntry": false,
-			"sourceMaps": true,
-			"outFiles": ["${workspaceRoot}/out/**/*.js"],
-			"preLaunchTask": "npm"
 		}
 	],
 	"compounds": []
