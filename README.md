@@ -10,6 +10,10 @@ This extension provides interfaces to rubocop for vscode.
 
 ![exec on save](./images/onsave.gif)
 
+## problems
+
+This extention may have a plobrem when rvm or chruby environment.
+
 ## features
 
 - lint by execute command "Ruby: lint by rubocop" (cmd+shift+p and type command)
