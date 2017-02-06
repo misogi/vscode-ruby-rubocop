@@ -41,16 +41,9 @@ export class Rubocop {
             currentPath = path.dirname(fileName);
         }
 
-        const executeFile = this.path + this.command;
 
         let onDidExec = (error: Error, stdout: string, stderr: string) => {
-            if (error && (<any>error).code === 'ENOENT') {
-                vscode.window.showWarningMessage(`${executeFile} is not executable`);
-                return;
-            } else if (error && (<any>error).code === 127) {
-                let errorMessage = stderr.toString();
-                vscode.window.showWarningMessage(errorMessage);
-                console.log(error.message);
+            if (this.hasError(error, stderr)) {
                 return;
             }
 
@@ -95,7 +88,9 @@ export class Rubocop {
             this.diag.set(entries);
         };
 
+        const executeFile = this.path + this.command;
         let args = this.commandArguments(fileName);
+
         return cp.execFile(executeFile, args, { cwd: currentPath }, onDidExec);
     }
 
@@ -117,6 +112,26 @@ export class Rubocop {
         }
 
         return commandArguments;
+    }
+
+    // checking rubocop output has error
+    private hasError(error: Error, stderr: string): boolean {
+        let errorOutput = stderr.toString();
+        if (error && (<any>error).code === 'ENOENT') {
+            vscode.window.showWarningMessage(`${this.path} + ${this.command} is not executable`);
+            return true;
+        } else if (error && (<any>error).code === 127) {
+            vscode.window.showWarningMessage(stderr);
+            console.log(error.message);
+            return true;
+        } else if (errorOutput.length > 0) {
+            vscode.window.showErrorMessage(stderr);
+            console.log(this.path + this.command);
+            console.log(errorOutput);
+            return true;
+        }
+
+        return false;
     }
 
     private resetConfig(): void {
