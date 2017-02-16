@@ -78,6 +78,7 @@
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.40",
     "mocha": "^2.3.3",
+    "tslint": "^4.4.2",
     "typescript": "2.1.6",
     "typescript-formatter": "^4.1.0",
     "vscode": "^1.0.3"
