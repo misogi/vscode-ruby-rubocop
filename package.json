@@ -75,9 +75,11 @@
     }
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.32",
+    "@types/chai": "^3.4.35",
+    "@types/mocha": "^2.2.39",
     "@types/node": "^6.0.40",
-    "mocha": "^2.3.3",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
     "tslint": "^4.4.2",
     "typescript": "2.1.6",
     "typescript-formatter": "^4.1.0",
