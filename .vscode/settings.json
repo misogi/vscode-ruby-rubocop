@@ -1,13 +1,11 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-	"files.exclude": {
-		"out": true,
-		"typings": false
-	},
-	"search.exclude": {
-		"**/node_modules": true,
-		"out/": true
-	},
-	"editor.insertSpaces": false,
-	"vsicons.presets.angular": false
+  "files.exclude": {
+    "out": false
+  },
+  "search.exclude": {
+    ".vscode-test": true,
+    "**/node_modules": true,
+    "out": true
+  }
 }
