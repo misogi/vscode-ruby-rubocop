@@ -76,10 +76,18 @@ You can change keybinding (via editing `keybindings.json`)
 
 # Contribute with this extension
 
-Use yarn
+Please install packages with yarn.
 
     yarn install
+
+You could install TSLint extension for .ts files.
 
 Formatting code using [vvakame/typescript-formatter](https://github.com/vvakame/typescript-formatter)
 
     tsfmt -r src/*
+
+# License
+
+このソフトウェアはMITライセンスの元で公開されています。[LICENSE.txt](LICENSE.txt) をご覧下さい。
+
+This software is released under the MIT License, see [LICENSE.txt](LICENSE.txt).
