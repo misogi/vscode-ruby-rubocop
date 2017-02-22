@@ -21,8 +21,7 @@ before_install:
       sleep 3;
     fi
 
-install:
-  - yarn
+before_script:
   - npm run vscode:prepublish
 
 script:
