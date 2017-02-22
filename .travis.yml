@@ -6,6 +6,9 @@ os:
   - osx
   - linux
 
+cache:
+  yarn: true
+
 # Ensure xvfb is available on Linux test hosts
 before_install:
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
