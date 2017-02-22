@@ -22,7 +22,7 @@ before_install:
     fi
 
 install:
-  - npm install
+  - yarn
   - npm run vscode:prepublish
 
 script:
