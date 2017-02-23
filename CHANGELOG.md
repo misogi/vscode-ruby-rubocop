@@ -1,6 +1,6 @@
 # 0.3.4
 
-- don't execute on git diff mode
+- don't execute when starting git diff mode
 
 # 0.3.3
 
