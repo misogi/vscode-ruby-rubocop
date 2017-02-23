@@ -1,3 +1,7 @@
+# 0.3.4
+
+- don't execute on git diff mode
+
 # 0.3.3
 
 - output error when stderr presented

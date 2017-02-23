@@ -26,6 +26,7 @@ export class Rubocop {
 
     public execute(document: vscode.TextDocument): ChildProcess {
         if (document.languageId !== 'ruby' || document.isUntitled) {
+            // git diff has ruby-mode. but it is Untitled file.
             return;
         }
 
