@@ -1,0 +1,28 @@
+# See https://code.visualstudio.com/Docs/extensions/testing-extensions
+
+sudo: false
+
+os:
+  - osx
+  - linux
+
+language: node_js
+node_js:
+  - node
+
+cache:
+  yarn: true
+
+# Ensure xvfb is available on Linux test hosts
+before_install:
+  - if [ $TRAVIS_OS_NAME == "linux" ]; then
+      export CXX="g++-4.9" CC="gcc-4.9" DISPLAY=:99.0;
+      sh -e /etc/init.d/xvfb start;
+      sleep 3;
+    fi
+
+before_script:
+  - npm run vscode:prepublish
+
+script:
+  - npm test --silent
