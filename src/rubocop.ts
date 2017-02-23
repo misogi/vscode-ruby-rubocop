@@ -25,7 +25,7 @@ export class Rubocop {
     }
 
     public execute(document: vscode.TextDocument): ChildProcess {
-        if (document.languageId !== 'ruby') {
+        if (document.languageId !== 'ruby' || document.isUntitled) {
             return;
         }
 
