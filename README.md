@@ -1,5 +1,7 @@
 # Rubocop for Visual Studio Code
 
+![travis status](https://travis-ci.org/misogi/vscode-ruby-rubocop.svg?branch=master)
+
 Visual Studio Code でrubocopを実行するエクステンションです。
 
 This extension provides interfaces to rubocop for vscode.
