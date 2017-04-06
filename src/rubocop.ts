@@ -86,7 +86,7 @@ export class Rubocop {
 
     // extract argument to an array
     protected commandArguments(fileName: string): Array<string> {
-        let commandArguments = [fileName, '--format', 'json'];
+        let commandArguments = [fileName, '--format', 'json', '--force-exclusion'];
 
         if (this.configPath !== '') {
             if (fs.existsSync(this.configPath)) {
