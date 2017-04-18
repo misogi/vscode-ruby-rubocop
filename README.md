@@ -25,7 +25,7 @@ We recommend [vscode-ruby](https://marketplace.visualstudio.com/items?itemName=r
 
 ### Exclude file
 
-An extention forces rubocop's 'force-exclusion' option.
+An extention forces rubocop's `force-exclusion` option.
 
 If you want not to execute rubocop on some file, You could add AllCops/Exclude on rubocop.yml. This can saving without executing rubocop.
 
