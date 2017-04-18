@@ -1,3 +1,7 @@
+# 0.3.5
+
+- force `force-exclude` option
+
 # 0.3.4
 
 - don't execute when starting git diff mode
