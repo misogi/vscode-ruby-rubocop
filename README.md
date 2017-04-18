@@ -23,6 +23,12 @@ We recommend [vscode-ruby](https://marketplace.visualstudio.com/items?itemName=r
 - auto invoke when saving file
 - auto correct command "Ruby: autocorrect by rubocop"
 
+### Exclude file
+
+An extention forces rubocop's 'force-exclusion' option.
+
+If you want not to execute rubocop on some file, You could add AllCops/Exclude on rubocop.yml. This can saving without executing rubocop.
+
 # Installation
 
 Installation of ruby and rubocop is required.
