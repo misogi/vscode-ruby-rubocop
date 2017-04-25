@@ -1,9 +1,9 @@
-import * as vscode from 'vscode';
-import * as cp from 'child_process';
-import { RubocopOutput, RubocopFile, RubocopOffense } from './rubocopOutput';
-import * as path from 'path';
-import * as fs from 'fs';
 import { ChildProcess } from 'child_process';
+import { RubocopOutput, RubocopFile, RubocopOffense } from './rubocopOutput';
+import * as cp from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as vscode from 'vscode';
 
 interface RubocopConfig {
     executePath: string;
