@@ -11,7 +11,7 @@ interface RubocopConfig {
     options: string[];
 }
 
-export class Rubocop {
+export default class Rubocop {
     private diag: vscode.DiagnosticCollection;
     private path: string;
     private command: string;

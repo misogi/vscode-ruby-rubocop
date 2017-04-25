@@ -1,4 +1,4 @@
-import { Rubocop } from './rubocop';
+import Rubocop from './rubocop';
 
 export class RubocopAutocorrect extends Rubocop {
     public get isOnSave(): boolean {

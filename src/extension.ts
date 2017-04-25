@@ -1,6 +1,6 @@
 
 import * as vscode from 'vscode';
-import { Rubocop } from './rubocop';
+import Rubocop from './rubocop';
 import { RubocopAutocorrect } from './rubocopAutocorrect';
 
 // entry point of extension
