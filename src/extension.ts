@@ -9,8 +9,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
     const diag = vscode.languages.createDiagnosticCollection('ruby');
     const rubocopAutocorrect = new RubocopAutocorrect(diag);
+
     vscode.commands.registerCommand('ruby.rubocopAutocorrect', () => {
         const document = vscode.window.activeTextEditor.document;
+
         if (document.languageId !== 'ruby') {
             return;
         }
@@ -22,6 +24,7 @@ export function activate(context: vscode.ExtensionContext): void {
     });
 
     context.subscriptions.push(diag);
+
     const rubocop = new Rubocop(diag);
     const disposable = vscode.commands.registerCommand('ruby.rubocop', () => {
         const document = vscode.window.activeTextEditor.document;
@@ -31,9 +34,11 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push(disposable);
 
     const ws = vscode.workspace;
+
     ws.onDidOpenTextDocument((e: vscode.TextDocument) => {
         rubocop.execute(e);
     });
+
     ws.onDidSaveTextDocument((e: vscode.TextDocument) => {
         if (rubocop.isOnSave) {
             rubocop.execute(e);

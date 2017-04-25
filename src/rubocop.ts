@@ -34,6 +34,7 @@ export default class Rubocop {
         }
 
         this.resetConfig();
+
         if (!this.path || 0 === this.path.length) {
             vscode.window.showWarningMessage('execute path is empty! please check ruby.rubocop.executePath config');
             return;
@@ -149,13 +150,22 @@ export default class Rubocop {
         return false;
     }
 
+    /**
+     * Read the workspace configuration for 'ruby.rubocop' and set the
+     * `path`, `configPath`, and `onSave` properties.
+     *
+     * @todo Refactor Rubocop to use vscode.workspace.onDidChangeConfiguration
+     *   rather than running Rubocop.resetConfig every time the Rubocop binary is executed
+     */
     private resetConfig(): void {
         const conf = vscode.workspace.getConfiguration('ruby.rubocop');
         this.path = conf.get('executePath', '');
+
         // try to autodetect the path (if it's not specified explicitly)
         if (!this.path || 0 === this.path.length) {
             this.path = this.autodetectExecutePath();
         }
+
         this.configPath = conf.get('configFilePath', '');
         this.onSave = conf.get('onSave', true);
     }
