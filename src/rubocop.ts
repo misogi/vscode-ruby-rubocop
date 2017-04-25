@@ -18,9 +18,12 @@ export default class Rubocop {
     private configPath: string;
     private onSave: boolean;
 
-    constructor(diagnostics: vscode.DiagnosticCollection) {
+    constructor(
+        diagnostics: vscode.DiagnosticCollection,
+        platform: NodeJS.Platform = process.platform,
+    ) {
         this.diag = diagnostics;
-        this.command = (process.platform === 'win32') ? 'rubocop.bat' : 'rubocop';
+        this.command = (platform === 'win32') ? 'rubocop.bat' : 'rubocop';
         this.resetConfig();
     }
 
