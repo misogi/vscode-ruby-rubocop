@@ -1,9 +1,9 @@
-import * as vscode from 'vscode';
-import * as cp from 'child_process';
-import { RubocopOutput, RubocopFile, RubocopOffense } from './rubocopOutput';
-import * as path from 'path';
-import * as fs from 'fs';
 import { ChildProcess } from 'child_process';
+import { RubocopOutput, RubocopFile, RubocopOffense } from './rubocopOutput';
+import * as cp from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as vscode from 'vscode';
 
 interface RubocopConfig {
     executePath: string;
@@ -11,16 +11,19 @@ interface RubocopConfig {
     options: string[];
 }
 
-export class Rubocop {
+export default class Rubocop {
     private diag: vscode.DiagnosticCollection;
     private path: string;
     private command: string;
     private configPath: string;
     private onSave: boolean;
 
-    constructor(diagnostics: vscode.DiagnosticCollection) {
+    constructor(
+        diagnostics: vscode.DiagnosticCollection,
+        platform: NodeJS.Platform = process.platform,
+    ) {
         this.diag = diagnostics;
-        this.command = (process.platform === 'win32') ? 'rubocop.bat' : 'rubocop';
+        this.command = (platform === 'win32') ? 'rubocop.bat' : 'rubocop';
         this.resetConfig();
     }
 
@@ -31,6 +34,7 @@ export class Rubocop {
         }
 
         this.resetConfig();
+
         if (!this.path || 0 === this.path.length) {
             vscode.window.showWarningMessage('execute path is empty! please check ruby.rubocop.executePath config');
             return;
@@ -146,13 +150,22 @@ export class Rubocop {
         return false;
     }
 
+    /**
+     * Read the workspace configuration for 'ruby.rubocop' and set the
+     * `path`, `configPath`, and `onSave` properties.
+     *
+     * @todo Refactor Rubocop to use vscode.workspace.onDidChangeConfiguration
+     *   rather than running Rubocop.resetConfig every time the Rubocop binary is executed
+     */
     private resetConfig(): void {
         const conf = vscode.workspace.getConfiguration('ruby.rubocop');
         this.path = conf.get('executePath', '');
+
         // try to autodetect the path (if it's not specified explicitly)
         if (!this.path || 0 === this.path.length) {
             this.path = this.autodetectExecutePath();
         }
+
         this.configPath = conf.get('configFilePath', '');
         this.onSave = conf.get('onSave', true);
     }
