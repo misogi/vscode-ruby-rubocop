@@ -35,6 +35,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
     const ws = vscode.workspace;
 
+    ws.textDocuments.forEach((e: vscode.TextDocument) => {
+        rubocop.execute(e);
+    });
+
     ws.onDidOpenTextDocument((e: vscode.TextDocument) => {
         rubocop.execute(e);
     });
@@ -43,5 +47,9 @@ export function activate(context: vscode.ExtensionContext): void {
         if (rubocop.isOnSave) {
             rubocop.execute(e);
         }
+    });
+
+    ws.onDidCloseTextDocument((e: vscode.TextDocument) => {
+        rubocop.clear(e);
     });
 }

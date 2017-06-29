@@ -11,12 +11,110 @@ interface RubocopConfig {
     options: string[];
 }
 
+interface TaskToken {
+    readonly isCanceled: boolean;
+    finished(): void;
+}
+
+class Task {
+    public url: vscode.Uri;
+    private childProcess?: ChildProcess;
+    private resolver?: () => void;
+    private _isCanceled: boolean = false;
+    private body: (token: TaskToken) => ChildProcess;
+
+    constructor(url: vscode.Uri, body: (token: TaskToken) => ChildProcess) {
+        this.url = url;
+        this.body = body;
+    }
+
+    public get isCanceled(): boolean {
+        return this._isCanceled;
+    }
+
+    public run(): Promise<void> {
+        if (this._isCanceled) {
+            return;
+        }
+        let task = this;
+        return new Promise<void>((resolve, reject) => {
+            task.resolver = () => resolve();
+            let token = {
+                get isCanceled(): boolean {
+                    return task.isCanceled;
+                },
+
+                finished(): void {
+                    task.resolve();
+                },
+            };
+            task.childProcess = this.body(token);
+        });
+    }
+
+    public cancel(): void {
+        this._isCanceled = true;
+        if (this.childProcess) {
+            this.childProcess.kill();
+        }
+        this.resolve();
+    }
+
+    private resolve(): void {
+        if (this.resolver) {
+            this.resolver();
+            this.resolver = undefined;
+        }
+    }
+}
+
+class TaskQueue {
+    private tasks: Task[] = [];
+    private busy: boolean = false;
+
+    public enqueue(task: Task): void {
+        this.cancel(task.url);
+        this.tasks.push(task);
+        this.kick().then();
+    }
+
+    public cancel(url: vscode.Uri): void {
+        let urlString = url.toString(true);
+        this.tasks.forEach(task => {
+            if (task.url.toString(true) === urlString) {
+                task.cancel();
+            }
+        });
+    }
+
+    public async kick(): Promise<void> {
+        if (this.busy) {
+            return;
+        }
+        this.busy = true;
+        while (true) {
+            let task: Task | undefined = this.tasks[0];
+            if (!task) {
+                this.busy = false;
+                return;
+            }
+            try {
+                await task.run();
+            } catch (e) {
+                console.error('Error while running rubocop: ', e.message, e.stack);
+            }
+            this.tasks.shift();
+        }
+    }
+}
+
 export default class Rubocop {
     private diag: vscode.DiagnosticCollection;
     private path: string;
     private command: string;
     private configPath: string;
     private onSave: boolean;
+    private taskQueue: TaskQueue = new TaskQueue();
 
     constructor(
         diagnostics: vscode.DiagnosticCollection,
@@ -27,7 +125,7 @@ export default class Rubocop {
         this.resetConfig();
     }
 
-    public execute(document: vscode.TextDocument): ChildProcess {
+    public execute(document: vscode.TextDocument): void {
         if (document.languageId !== 'ruby' || document.isUntitled) {
             // git diff has ruby-mode. but it is Untitled file.
             return;
@@ -41,6 +139,7 @@ export default class Rubocop {
         }
 
         const fileName = document.fileName;
+        const url = vscode.Uri.file(fileName);
         let currentPath = vscode.workspace.rootPath;
         if (!currentPath) {
             currentPath = path.dirname(fileName);
@@ -51,7 +150,7 @@ export default class Rubocop {
                 return;
             }
 
-            this.diag.clear();
+            this.diag.delete(url);
             let rubocop = this.parse(stdout);
 
             if (rubocop === undefined || rubocop === null) {
@@ -61,7 +160,6 @@ export default class Rubocop {
             let entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
             rubocop.files.forEach((file: RubocopFile) => {
                 let diagnostics = [];
-                const url = vscode.Uri.file(fileName);
                 file.offenses.forEach((offence: RubocopOffense) => {
                     const loc = offence.location;
                     const range = new vscode.Range(
@@ -81,11 +179,26 @@ export default class Rubocop {
         const executeFile = this.path + this.command;
         let args = this.commandArguments(fileName);
 
-        return cp.execFile(executeFile, args, { cwd: currentPath }, onDidExec);
+        let task = new Task(url, token => {
+            return cp.execFile(executeFile, args, { cwd: currentPath }, (error: Error, stdout: string, stderr: string) => {
+                if (token.isCanceled) {
+                    return;
+                }
+                onDidExec(error, stdout, stderr);
+                token.finished();
+            });
+        });
+        this.taskQueue.enqueue(task);
     }
 
     public get isOnSave(): boolean {
         return this.onSave;
+    }
+
+    public clear(document: vscode.TextDocument): void {
+        let uri = vscode.Uri.file(document.fileName);
+        this.taskQueue.cancel(uri);
+        this.diag.delete(uri);
     }
 
     // extract argument to an array
