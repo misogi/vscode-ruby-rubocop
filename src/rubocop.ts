@@ -108,7 +108,7 @@ export default class Rubocop {
     private parse(output: string): RubocopOutput | null {
         let rubocop: RubocopOutput;
         if (output.length < 1) {
-            var message = `command ${this.path}${this.command} returns empty output! please check configuration.`;
+            let message = `command ${this.path}${this.command} returns empty output! please check configuration.`;
             vscode.window.showWarningMessage(message);
 
             return null;
