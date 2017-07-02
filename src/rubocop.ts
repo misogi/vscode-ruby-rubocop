@@ -11,6 +11,10 @@ interface RubocopConfig {
     options: string[];
 }
 
+function isFileUri(uri: vscode.Uri): boolean {
+    return uri.scheme === 'file';
+}
+
 export default class Rubocop {
     private diag: vscode.DiagnosticCollection;
     private path: string;
@@ -32,7 +36,7 @@ export default class Rubocop {
     }
 
     public execute(document: vscode.TextDocument, onComplete?: () => void): void {
-        if (document.languageId !== 'ruby' || document.isUntitled) {
+        if (document.languageId !== 'ruby' || document.isUntitled || !isFileUri(document.uri)) {
             // git diff has ruby-mode. but it is Untitled file.
             return;
         }
@@ -45,7 +49,7 @@ export default class Rubocop {
         }
 
         const fileName = document.fileName;
-        const url = vscode.Uri.file(fileName);
+        const uri = document.uri;
         let currentPath = vscode.workspace.rootPath;
         if (!currentPath) {
             currentPath = path.dirname(fileName);
@@ -56,7 +60,7 @@ export default class Rubocop {
                 return;
             }
 
-            this.diag.delete(url);
+            this.diag.delete(uri);
             let rubocop = this.parse(stdout);
 
             if (rubocop === undefined || rubocop === null) {
@@ -76,7 +80,7 @@ export default class Rubocop {
                         range, message, sev);
                     diagnostics.push(diagnostic);
                 });
-                entries.push([url, diagnostics]);
+                entries.push([uri, diagnostics]);
             });
 
             this.diag.set(entries);
@@ -85,7 +89,7 @@ export default class Rubocop {
         const executeFile = this.path + this.command;
         let args = this.commandArguments(fileName);
 
-        let task = new Task(url, token => {
+        let task = new Task(uri, token => {
             let process = cp.execFile(executeFile, args, { cwd: currentPath }, (error: Error, stdout: string, stderr: string) => {
                 if (token.isCanceled) {
                     return;
@@ -106,9 +110,11 @@ export default class Rubocop {
     }
 
     public clear(document: vscode.TextDocument): void {
-        let url = vscode.Uri.file(document.fileName);
-        this.taskQueue.cancel(url);
-        this.diag.delete(url);
+        let uri = document.uri;
+        if (isFileUri(uri)) {
+            this.taskQueue.cancel(uri);
+            this.diag.delete(uri);
+        }
     }
 
     // extract argument to an array
