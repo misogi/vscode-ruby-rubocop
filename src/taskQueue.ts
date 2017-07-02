@@ -13,6 +13,7 @@ export type CancelCallback = () => void;
  */
 export class Task {
     public readonly url: vscode.Uri;
+    public isEnqueued: boolean = false;
     private body: (token: TaskToken) => CancelCallback;
     private isCanceled: boolean = false;
     private resolver?: () => void;
@@ -76,8 +77,16 @@ export class TaskQueue {
     private tasks: Task[] = [];
     private busy: boolean = false;
 
+    public get length(): number {
+        return this.tasks.length;
+    }
+
     public enqueue(task: Task): void {
+        if (task.isEnqueued) {
+            throw new Error('Task is already enqueued. (url: ' + task.url + ')');
+        }
         this.cancel(task.url);
+        task.isEnqueued = true;
         this.tasks.push(task);
         this.kick();
     }
