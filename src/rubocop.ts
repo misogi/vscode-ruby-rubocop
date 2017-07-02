@@ -112,20 +112,23 @@ export default class Rubocop {
     private diag: vscode.DiagnosticCollection;
     private path: string;
     private command: string;
+    private additionalArguments: string[];
     private configPath: string;
     private onSave: boolean;
     private taskQueue: TaskQueue = new TaskQueue();
 
     constructor(
         diagnostics: vscode.DiagnosticCollection,
+        additionalArguments: string[] = [],
         platform: NodeJS.Platform = process.platform,
     ) {
         this.diag = diagnostics;
         this.command = (platform === 'win32') ? 'rubocop.bat' : 'rubocop';
+        this.additionalArguments = additionalArguments;
         this.resetConfig();
     }
 
-    public execute(document: vscode.TextDocument): void {
+    public execute(document: vscode.TextDocument, onComplete?: () => void): void {
         if (document.languageId !== 'ruby' || document.isUntitled) {
             // git diff has ruby-mode. but it is Untitled file.
             return;
@@ -186,6 +189,9 @@ export default class Rubocop {
                 }
                 onDidExec(error, stdout, stderr);
                 token.finished();
+                if (onComplete) {
+                    onComplete();
+                }
             });
         });
         this.taskQueue.enqueue(task);
@@ -202,7 +208,7 @@ export default class Rubocop {
     }
 
     // extract argument to an array
-    protected commandArguments(fileName: string): Array<string> {
+    protected commandArguments(fileName: string): string[] {
         let commandArguments = [fileName, '--format', 'json', '--force-exclusion'];
 
         if (this.configPath !== '') {
@@ -214,7 +220,7 @@ export default class Rubocop {
             }
         }
 
-        return commandArguments;
+        return commandArguments.concat(this.additionalArguments || []);
     }
 
     // parse rubocop(JSON) output

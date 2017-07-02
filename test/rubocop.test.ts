@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { stub } from 'sinon';
 import * as vscode from 'vscode';
 import Rubocop from '../src/rubocop';
 
@@ -22,7 +21,7 @@ describe('Rubocop', () => {
     describe('.command', () => {
       describe('when process.platform is "win32"', () => {
         beforeEach(() => {
-          instance = new Rubocop(diagnostics, 'win32');
+          instance = new Rubocop(diagnostics, undefined, 'win32');
         });
 
         it('is set to "rubocop.bat"', () => {
@@ -32,7 +31,7 @@ describe('Rubocop', () => {
 
       describe('when process.platform is not "win32"', () => {
         beforeEach(() => {
-          instance = new Rubocop(diagnostics, 'linux');
+          instance = new Rubocop(diagnostics, undefined, 'linux');
         });
 
         it('is set to "rubocop"', () => {

@@ -1,14 +1,13 @@
 
 import * as vscode from 'vscode';
 import Rubocop from './rubocop';
-import { RubocopAutocorrect } from './rubocopAutocorrect';
 
 // entry point of extension
 export function activate(context: vscode.ExtensionContext): void {
     'use strict';
 
     const diag = vscode.languages.createDiagnosticCollection('ruby');
-    const rubocopAutocorrect = new RubocopAutocorrect(diag);
+    const rubocopAutocorrect = new Rubocop(diag, ['--auto-correct']);
 
     vscode.commands.registerCommand('ruby.rubocopAutocorrect', () => {
         const document = vscode.window.activeTextEditor.document;
@@ -18,8 +17,7 @@ export function activate(context: vscode.ExtensionContext): void {
         }
 
         document.save().then(() => {
-            rubocopAutocorrect.execute(document)
-                .addListener('close', () => rubocop.execute(document));
+            rubocopAutocorrect.execute(document, () => rubocop.execute(document));
         });
     });
 
