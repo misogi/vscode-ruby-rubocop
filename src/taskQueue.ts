@@ -12,7 +12,7 @@ export type CancelCallback = () => void;
  * TaskQueue. Useful for spawning ChildProcess.
  */
 export class Task {
-    public readonly url: vscode.Uri;
+    public readonly uri: vscode.Uri;
     public isEnqueued: boolean = false;
     private body: (token: TaskToken) => CancelCallback;
     private isCanceled: boolean = false;
@@ -24,8 +24,8 @@ export class Task {
      *             when cancelation is requested. You should call
      *             token.finished() after async operation is done.
      */
-    constructor(url: vscode.Uri, body: (token: TaskToken) => CancelCallback) {
-        this.url = url;
+    constructor(uri: vscode.Uri, body: (token: TaskToken) => CancelCallback) {
+        this.uri = uri;
         this.body = body;
     }
 
@@ -83,18 +83,18 @@ export class TaskQueue {
 
     public enqueue(task: Task): void {
         if (task.isEnqueued) {
-            throw new Error('Task is already enqueued. (url: ' + task.url + ')');
+            throw new Error('Task is already enqueued. (uri: ' + task.uri + ')');
         }
-        this.cancel(task.url);
+        this.cancel(task.uri);
         task.isEnqueued = true;
         this.tasks.push(task);
         this.kick();
     }
 
-    public cancel(url: vscode.Uri): void {
-        let urlString = url.toString(true);
+    public cancel(uri: vscode.Uri): void {
+        let uriString = uri.toString(true);
         this.tasks.forEach(task => {
-            if (task.url.toString(true) === urlString) {
+            if (task.uri.toString(true) === uriString) {
                 task.cancel();
             }
         });

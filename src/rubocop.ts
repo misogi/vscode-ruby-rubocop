@@ -106,9 +106,9 @@ export default class Rubocop {
     }
 
     public clear(document: vscode.TextDocument): void {
-        let uri = vscode.Uri.file(document.fileName);
-        this.taskQueue.cancel(uri);
-        this.diag.delete(uri);
+        let url = vscode.Uri.file(document.fileName);
+        this.taskQueue.cancel(url);
+        this.diag.delete(url);
     }
 
     // extract argument to an array
@@ -124,7 +124,7 @@ export default class Rubocop {
             }
         }
 
-        return commandArguments.concat(this.additionalArguments || []);
+        return commandArguments.concat(this.additionalArguments);
     }
 
     // parse rubocop(JSON) output
