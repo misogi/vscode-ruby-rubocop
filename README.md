@@ -17,6 +17,8 @@ This extension provides interfaces to rubocop for vscode.
 This extention may have a plobrem when rvm or chruby environment.
 We recommend [vscode-ruby](https://marketplace.visualstudio.com/items?itemName=rebornix.Ruby). It can also lint ruby code.
 
+When autoCorrect, History of changing file is broken.
+
 ## features
 
 - lint by execute command "Ruby: lint by rubocop" (cmd+shift+p and type command)
