@@ -1,5 +1,5 @@
-import { ChildProcess } from 'child_process';
 import { RubocopOutput, RubocopFile, RubocopOffense } from './rubocopOutput';
+import { TaskQueue, Task } from './taskQueue';
 import * as cp from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -11,24 +11,32 @@ interface RubocopConfig {
     options: string[];
 }
 
+function isFileUri(uri: vscode.Uri): boolean {
+    return uri.scheme === 'file';
+}
+
 export default class Rubocop {
     private diag: vscode.DiagnosticCollection;
     private path: string;
     private command: string;
+    private additionalArguments: string[];
     private configPath: string;
     private onSave: boolean;
+    private taskQueue: TaskQueue = new TaskQueue();
 
     constructor(
         diagnostics: vscode.DiagnosticCollection,
+        additionalArguments: string[] = [],
         platform: NodeJS.Platform = process.platform,
     ) {
         this.diag = diagnostics;
         this.command = (platform === 'win32') ? 'rubocop.bat' : 'rubocop';
+        this.additionalArguments = additionalArguments;
         this.resetConfig();
     }
 
-    public execute(document: vscode.TextDocument): ChildProcess {
-        if (document.languageId !== 'ruby' || document.isUntitled) {
+    public execute(document: vscode.TextDocument, onComplete?: () => void): void {
+        if (document.languageId !== 'ruby' || document.isUntitled || !isFileUri(document.uri)) {
             // git diff has ruby-mode. but it is Untitled file.
             return;
         }
@@ -41,6 +49,7 @@ export default class Rubocop {
         }
 
         const fileName = document.fileName;
+        const uri = document.uri;
         let currentPath = vscode.workspace.rootPath;
         if (!currentPath) {
             currentPath = path.dirname(fileName);
@@ -51,7 +60,7 @@ export default class Rubocop {
                 return;
             }
 
-            this.diag.clear();
+            this.diag.delete(uri);
             let rubocop = this.parse(stdout);
 
             if (rubocop === undefined || rubocop === null) {
@@ -61,7 +70,6 @@ export default class Rubocop {
             let entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
             rubocop.files.forEach((file: RubocopFile) => {
                 let diagnostics = [];
-                const url = vscode.Uri.file(fileName);
                 file.offenses.forEach((offence: RubocopOffense) => {
                     const loc = offence.location;
                     const range = new vscode.Range(
@@ -72,7 +80,7 @@ export default class Rubocop {
                         range, message, sev);
                     diagnostics.push(diagnostic);
                 });
-                entries.push([url, diagnostics]);
+                entries.push([uri, diagnostics]);
             });
 
             this.diag.set(entries);
@@ -81,15 +89,36 @@ export default class Rubocop {
         const executeFile = this.path + this.command;
         let args = this.commandArguments(fileName);
 
-        return cp.execFile(executeFile, args, { cwd: currentPath }, onDidExec);
+        let task = new Task(uri, token => {
+            let process = cp.execFile(executeFile, args, { cwd: currentPath }, (error: Error, stdout: string, stderr: string) => {
+                if (token.isCanceled) {
+                    return;
+                }
+                onDidExec(error, stdout, stderr);
+                token.finished();
+                if (onComplete) {
+                    onComplete();
+                }
+            });
+            return () => process.kill();
+        });
+        this.taskQueue.enqueue(task);
     }
 
     public get isOnSave(): boolean {
         return this.onSave;
     }
 
+    public clear(document: vscode.TextDocument): void {
+        let uri = document.uri;
+        if (isFileUri(uri)) {
+            this.taskQueue.cancel(uri);
+            this.diag.delete(uri);
+        }
+    }
+
     // extract argument to an array
-    protected commandArguments(fileName: string): Array<string> {
+    protected commandArguments(fileName: string): string[] {
         let commandArguments = [fileName, '--format', 'json', '--force-exclusion'];
 
         if (this.configPath !== '') {
@@ -101,14 +130,14 @@ export default class Rubocop {
             }
         }
 
-        return commandArguments;
+        return commandArguments.concat(this.additionalArguments);
     }
 
     // parse rubocop(JSON) output
     private parse(output: string): RubocopOutput | null {
         let rubocop: RubocopOutput;
         if (output.length < 1) {
-            var message = `command ${this.path}${this.command} returns empty output! please check configuration.`;
+            let message = `command ${this.path}${this.command} returns empty output! please check configuration.`;
             vscode.window.showWarningMessage(message);
 
             return null;
