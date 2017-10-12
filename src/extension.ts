@@ -1,6 +1,7 @@
 
 import * as vscode from 'vscode';
 import Rubocop from './rubocop';
+import { onDidChangeConfiguration } from './configuration';
 
 // entry point of extension
 export function activate(context: vscode.ExtensionContext): void {
@@ -32,6 +33,8 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push(disposable);
 
     const ws = vscode.workspace;
+
+    ws.onDidChangeConfiguration(onDidChangeConfiguration(rubocop));
 
     ws.textDocuments.forEach((e: vscode.TextDocument) => {
         rubocop.execute(e);
