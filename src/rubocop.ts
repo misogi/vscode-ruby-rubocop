@@ -5,12 +5,72 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { getConfig, RubocopConfig } from './configuration';
+import * as os from 'os';
+
+const tmpFileName = path.join(os.tmpdir(), '_rubocop.rb');
+
+export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEditProvider {
+    public provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
+        const config = getConfig();
+        fs.writeFileSync(tmpFileName, document.getText());
+        const onSuccess = () => {
+            const newText = fs.readFileSync(tmpFileName).toString();
+            fs.unlink(tmpFileName);
+            return [new vscode.TextEdit(this.getFullRange(document), newText)];
+        };
+        try {
+            cp.execFileSync(
+                config.command,
+                [tmpFileName, ...getCommandArguments(tmpFileName), '--auto-correct'],
+                { cwd: getCurrentPath(document.fileName) },
+            );
+        } catch (e) {
+            // if there are still some offences not fixed rubocop will return status 1
+            if (e.status !== 1) {
+                vscode.window.showWarningMessage('An error occured during autocorrection');
+                console.log(e);
+                fs.unlink(tmpFileName);
+                return [];
+            } else {
+                return onSuccess();
+            }
+        }
+        return onSuccess();
+    }
+
+    private getFullRange(document: vscode.TextDocument): vscode.Range {
+        return new vscode.Range(
+            new vscode.Position(0, 0),
+            document.lineAt(document.lineCount - 1).range.end,
+        );
+    }
+}
 
 function isFileUri(uri: vscode.Uri): boolean {
     return uri.scheme === 'file';
 }
 
-export default class Rubocop {
+function getCurrentPath(fileName: string): string {
+    return vscode.workspace.rootPath || path.dirname(fileName);
+}
+
+// extract argument to an array
+function getCommandArguments(fileName: string): string[] {
+    let commandArguments = [fileName, '--format', 'json', '--force-exclusion'];
+    const extensionConfig = getConfig();
+    if (extensionConfig.configFilePath !== '') {
+        if (fs.existsSync(extensionConfig.configFilePath)) {
+            const config = ['--config', extensionConfig.configFilePath];
+            commandArguments = commandArguments.concat(config);
+        } else {
+            vscode.window.showWarningMessage(`${extensionConfig.configFilePath} file does not exist. Ignoring...`);
+        }
+    }
+
+    return commandArguments;
+}
+
+export class Rubocop {
     public config: RubocopConfig;
     private diag: vscode.DiagnosticCollection;
     private additionalArguments: string[];
@@ -33,10 +93,7 @@ export default class Rubocop {
 
         const fileName = document.fileName;
         const uri = document.uri;
-        let currentPath = vscode.workspace.rootPath;
-        if (!currentPath) {
-            currentPath = path.dirname(fileName);
-        }
+        let currentPath = getCurrentPath(fileName);
 
         let onDidExec = (error: Error, stdout: string, stderr: string) => {
             if (this.hasError(error, stderr)) {
@@ -69,7 +126,7 @@ export default class Rubocop {
             this.diag.set(entries);
         };
 
-        const args = this.commandArguments(fileName);
+        const args = getCommandArguments(fileName).concat(this.additionalArguments);
 
         let task = new Task(uri, token => {
             let process = this.executeRubocop(args, { cwd: currentPath }, (error, stdout, stderr) => {
@@ -97,22 +154,6 @@ export default class Rubocop {
             this.taskQueue.cancel(uri);
             this.diag.delete(uri);
         }
-    }
-
-    // extract argument to an array
-    protected commandArguments(fileName: string): string[] {
-        let commandArguments = [fileName, '--format', 'json', '--force-exclusion'];
-
-        if (this.config.configFilePath !== '') {
-            if (fs.existsSync(this.config.configFilePath)) {
-                const config = ['--config', this.config.configFilePath];
-                commandArguments = commandArguments.concat(config);
-            } else {
-                vscode.window.showWarningMessage(`${this.config.configFilePath} file does not exist. Ignoring...`);
-            }
-        }
-
-        return commandArguments.concat(this.additionalArguments);
     }
 
     // execute rubocop
@@ -180,5 +221,4 @@ export default class Rubocop {
             default: return vscode.DiagnosticSeverity.Error;
         }
     }
-
 }
