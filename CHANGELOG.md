@@ -1,4 +1,9 @@
+# 0.6.0
+
+- Set autocorrect as a formatter
+
 # 0.5.0
+
 - Automatically detect and use bundled rubocop
 
 # 0.4.0
