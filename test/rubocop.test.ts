@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import * as vscode from 'vscode';
-import Rubocop from '../src/rubocop';
+import { Rubocop } from '../src/rubocop';
 
 describe('Rubocop', () => {
   let instance: Rubocop;

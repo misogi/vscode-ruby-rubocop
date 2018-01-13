@@ -2,7 +2,7 @@ import * as vs from 'vscode';
 import * as fs from 'fs';
 import * as cp from 'child_process';
 import * as path from 'path';
-import Rubocop from './rubocop';
+import { Rubocop } from './rubocop';
 
 export interface RubocopConfig {
     command: string;

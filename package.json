@@ -42,14 +42,14 @@
         "title": "Ruby: lint by rubocop"
       },
       {
-        "command": "ruby.rubocopAutocorrect",
+        "command": "editor.action.formatDocument",
         "title": "Ruby: autocorrect by rubocop"
       }
     ],
     "keybindings": [
       {
         "key": "shift+ctrl+r",
-        "command": "ruby.rubocopAutocorrect",
+        "command": "editor.action.formatDocument",
         "when": "editorLangId == 'ruby'"
       }
     ],
