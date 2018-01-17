@@ -19,9 +19,10 @@ export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEdit
             return [new vscode.TextEdit(this.getFullRange(document), newText)];
         };
         try {
+            const cmd = config.command.split(/\s+/)
             cp.execFileSync(
-                config.command,
-                [tmpFileName, ...getCommandArguments(tmpFileName), '--auto-correct'],
+                cmd.pop(),
+                [...cmd, tmpFileName, ...getCommandArguments(tmpFileName), '--auto-correct'],
                 { cwd: getCurrentPath(document.fileName) },
             );
         } catch (e) {
