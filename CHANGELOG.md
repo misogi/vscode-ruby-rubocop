@@ -1,3 +1,7 @@
+# 0.6.1
+
+- Accepts a command is prefixed like 'bundle exec'
+
 # 0.6.0
 
 - Set autocorrect as a formatter
