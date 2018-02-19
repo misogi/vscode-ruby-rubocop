@@ -10,7 +10,6 @@ import * as os from 'os';
 export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEditProvider {
     public provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
         const config = getConfig();
-
         try {
             const args = [
                 ...getCommandArguments(document.fileName),
@@ -40,7 +39,7 @@ export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEdit
         }
     }
 
-    private onSuccess(document: vscode.TextDocument, stdout) {
+    private onSuccess(document: vscode.TextDocument, stdout: Buffer) {
         return [
             new vscode.TextEdit(
                 this.getFullRange(document),
@@ -71,13 +70,7 @@ function getCurrentPath(fileName: string): string {
 
 // extract argument to an array
 function getCommandArguments(fileName: string): string[] {
-    let commandArguments = [
-        "--stdin",
-        fileName,
-        "--format",
-        "json",
-        "--force-exclusion"
-    ];
+    let commandArguments = ['--stdin', fileName, '--format', 'json', '--force-exclusion'];
     const extensionConfig = getConfig();
     if (extensionConfig.configFilePath !== '') {
         if (fs.existsSync(extensionConfig.configFilePath)) {
@@ -183,11 +176,10 @@ export class Rubocop {
         args: string[],
         fileContents: string,
         options: cp.ExecFileOptions,
-        cb: (err: Error, stdout: string, stderr: string) => void
-    ): cp.ChildProcess {
+        cb: (err: Error, stdout: string, stderr: string) => void): cp.ChildProcess {
         let child;
         if (this.config.useBundler) {
-            child = cp.exec(`${this.config.command} ${args.join(" ")}`, options, cb);
+            child = cp.exec(`${this.config.command} ${args.join(' ')}`, options, cb);
         } else {
             child = cp.execFile(this.config.command, args, options, cb);
         }
