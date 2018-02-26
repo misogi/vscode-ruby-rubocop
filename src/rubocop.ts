@@ -7,36 +7,59 @@ import * as vscode from 'vscode';
 import { getConfig, RubocopConfig } from './configuration';
 import * as os from 'os';
 
-const tmpFileName = path.join(os.tmpdir(), '_rubocop.rb');
-
 export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEditProvider {
     public provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
         const config = getConfig();
-        fs.writeFileSync(tmpFileName, document.getText());
-        const onSuccess = () => {
-            const newText = fs.readFileSync(tmpFileName).toString();
-            fs.unlink(tmpFileName);
-            return [new vscode.TextEdit(this.getFullRange(document), newText)];
-        };
         try {
-            const cmd = config.command.split(/\s+/)
-            cp.execFileSync(
-                cmd.pop(),
-                [...cmd, tmpFileName, ...getCommandArguments(tmpFileName), '--auto-correct'],
-                { cwd: getCurrentPath(document.fileName) },
-            );
+            const args = [
+                ...getCommandArguments(document.fileName),
+                "--auto-correct"
+            ];
+            const options = {
+                cwd: getCurrentPath(document.fileName),
+                input: document.getText()
+            };
+            let stdout;
+            if (config.useBundler) {
+                stdout = cp.execSync(`${config.command} ${args.join(" ")}`, options);
+            } else {
+                stdout = cp.execFileSync(config.command, args, options);
+            }
+
+            return this.onSuccess(document, stdout);
         } catch (e) {
             // if there are still some offences not fixed rubocop will return status 1
             if (e.status !== 1) {
                 vscode.window.showWarningMessage('An error occured during autocorrection');
                 console.log(e);
-                fs.unlink(tmpFileName);
                 return [];
             } else {
-                return onSuccess();
+                return this.onSuccess(document, e.stdout);
             }
         }
-        return onSuccess();
+    }
+
+
+    // Output of autocorrection looks like this:
+    // 
+    // {"metadata": ... {"offense_count":5,"target_file_count":1,"inspected_file_count":1}}====================
+    // def a
+    //   3
+    // end
+    // 
+    // So we need to parse out the actual autocorrected ruby
+    private onSuccess(document: vscode.TextDocument, stdout: Buffer) {
+        const stringOut = stdout.toString()
+        const autoCorrection = stringOut.match(/^{.*}====================\n([.\s\S]*)/m)
+        if (!autoCorrection) {
+            throw new Error(`Error parsing autocorrection from CLI: ${stringOut}`)
+        }
+        return [
+            new vscode.TextEdit(
+                this.getFullRange(document),
+                autoCorrection.pop()
+            )
+        ];
     }
 
     private getFullRange(document: vscode.TextDocument): vscode.Range {
@@ -57,7 +80,7 @@ function getCurrentPath(fileName: string): string {
 
 // extract argument to an array
 function getCommandArguments(fileName: string): string[] {
-    let commandArguments = [fileName, '--format', 'json', '--force-exclusion'];
+    let commandArguments = ['--stdin', fileName, '--format', 'json', '--force-exclusion'];
     const extensionConfig = getConfig();
     if (extensionConfig.configFilePath !== '') {
         if (fs.existsSync(extensionConfig.configFilePath)) {
@@ -130,7 +153,7 @@ export class Rubocop {
         const args = getCommandArguments(fileName).concat(this.additionalArguments);
 
         let task = new Task(uri, token => {
-            let process = this.executeRubocop(args, { cwd: currentPath }, (error, stdout, stderr) => {
+            let process = this.executeRubocop(args, document.getText(), { cwd: currentPath }, (error, stdout, stderr) => {
                 if (token.isCanceled) {
                     return;
                 }
@@ -157,16 +180,22 @@ export class Rubocop {
         }
     }
 
+
     // execute rubocop
     private executeRubocop(
         args: string[],
+        fileContents: string,
         options: cp.ExecFileOptions,
         cb: (err: Error, stdout: string, stderr: string) => void): cp.ChildProcess {
+        let child;
         if (this.config.useBundler) {
-            return cp.exec(`${this.config.command} ${args.join(' ')}`, options, cb);
+            child = cp.exec(`${this.config.command} ${args.join(' ')}`, options, cb);
         } else {
-            return cp.execFile(this.config.command, args, options, cb);
+            child = cp.execFile(this.config.command, args, options, cb);
         }
+        child.stdin.write(fileContents);
+        child.stdin.end();
+        return child;
     }
 
     // parse rubocop(JSON) output
