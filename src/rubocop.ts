@@ -39,15 +39,25 @@ export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEdit
         }
     }
 
+
+    // Output of autocorrection looks like this:
+    // 
+    // {"metadata": ... {"offense_count":5,"target_file_count":1,"inspected_file_count":1}}====================
+    // def a
+    //   3
+    // end
+    // 
+    // So we need to parse out the actual autocorrected ruby
     private onSuccess(document: vscode.TextDocument, stdout: Buffer) {
+        const stringOut = stdout.toString()
+        const autoCorrection = stringOut.match(/^{.*}====================\n([.\s\S]*)/m)
+        if (!autoCorrection) {
+            throw new Error(`Error parsing autocorrection from CLI: ${stringOut}`)
+        }
         return [
             new vscode.TextEdit(
                 this.getFullRange(document),
-                stdout
-                    .toString()
-                    .split("====================\n")
-                    .slice(1)
-                    .join("\n") // json is written to 1st line, autocorrected file starts on 2nd line
+                autoCorrection.pop()
             )
         ];
     }
