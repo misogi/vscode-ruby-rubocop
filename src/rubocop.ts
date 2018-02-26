@@ -45,7 +45,7 @@ export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEdit
                 this.getFullRange(document),
                 stdout
                     .toString()
-                    .split("\n")
+                    .split("====================\n")
                     .slice(1)
                     .join("\n") // json is written to 1st line, autocorrected file starts on 2nd line
             )
