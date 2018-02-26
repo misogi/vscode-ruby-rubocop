@@ -34,7 +34,7 @@ export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEdit
                 console.log(e);
                 return [];
             } else {
-                return this.onSuccess(document, e);
+                return this.onSuccess(document, e.stdout);
             }
         }
     }
