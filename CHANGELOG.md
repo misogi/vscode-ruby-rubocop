@@ -1,3 +1,7 @@
+# 0.7.0
+
+- Fix autocorrect was not respecting the .rubocop.yml
+
 # 0.6.1
 
 - Accepts a command is prefixed like 'bundle exec'
