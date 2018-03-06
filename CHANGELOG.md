@@ -19,7 +19,7 @@
 - Lint files opened before the extension is loaded.
 - Don't clear diagnostics of other files.
 - Kill running rubocop process on close a file.
-- Run single process at a time (to avoid accidential process bomb) (using queue).
+- Run single process at a time (to avoid accidental process bomb) (using queue).
   - This is caused by vscode's project-wide replace (opens all matched file at once).
 
 # 0.3.5
