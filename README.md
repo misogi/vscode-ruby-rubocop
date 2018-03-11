@@ -14,7 +14,7 @@ This extension provides interfaces to rubocop for vscode.
 
 ## problems
 
-This extention may have a plobrem when rvm or chruby environment.
+This extension may have a problem when using a rvm or chruby environment.
 We recommend [vscode-ruby](https://marketplace.visualstudio.com/items?itemName=rebornix.Ruby). It can also lint ruby code.
 
 When autoCorrect, History of changing file is broken.
@@ -27,7 +27,7 @@ When autoCorrect, History of changing file is broken.
 
 ### Exclude file
 
-An extention forces rubocop's `force-exclusion` option.
+An extension forces rubocop's `force-exclusion` option.
 
 If you want not to execute rubocop on some file, You could add AllCops/Exclude on rubocop.yml. This can saving without executing rubocop.
 
