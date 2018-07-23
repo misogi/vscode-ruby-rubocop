@@ -50,7 +50,7 @@ export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEdit
     // So we need to parse out the actual autocorrected ruby
     private onSuccess(document: vscode.TextDocument, stdout: Buffer) {
         const stringOut = stdout.toString()
-        const autoCorrection = stringOut.match(/^{.*}====================\n([.\s\S]*)/m)
+        const autoCorrection = stringOut.match(/^{.*}====================(?:\n|\r\n)([.\s\S]*)/m)
         if (!autoCorrection) {
             throw new Error(`Error parsing autocorrection from CLI: ${stringOut}`)
         }
