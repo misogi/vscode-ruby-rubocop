@@ -1,11 +1,11 @@
 {
   "name": "ruby-rubocop",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "publisher": "misogi",
   "displayName": "ruby-rubocop",
   "description": "execute rubocop for current Ruby code.",
   "engines": {
-    "vscode": "^1.11.0"
+    "vscode": "^1.27.0"
   },
   "icon": "images/rubocop.png",
   "repository": {
@@ -13,7 +13,7 @@
     "url": "https://github.com/misogi/vscode-ruby-rubocop.git"
   },
   "categories": [
-    "Languages",
+    "Programming Languages",
     "Linters"
   ],
   "activationEvents": [
