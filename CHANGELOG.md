@@ -1,3 +1,7 @@
+# 0.7.1
+
+- Fix autoCorrection find on windows
+
 # 0.7.0
 
 - Fix autocorrect was not respecting the .rubocop.yml
