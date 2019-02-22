@@ -35,6 +35,12 @@
         "extensions": [
           ".rb"
         ]
+      },
+      {
+        "id": "gemfile",
+        "filenamePatterns": [
+          "Gemfile"
+        ]
       }
     ],
     "commands": [
@@ -51,7 +57,7 @@
       {
         "key": "shift+ctrl+r",
         "command": "editor.action.formatDocument",
-        "when": "editorLangId == 'ruby'"
+        "when": "editorLangId == 'ruby' || editorLangId == 'gemfile'"
       }
     ],
     "configuration": {

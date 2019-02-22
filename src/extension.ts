@@ -1,4 +1,3 @@
-
 import * as vscode from 'vscode';
 import { Rubocop, RubocopAutocorrectProvider } from './rubocop';
 import { onDidChangeConfiguration } from './configuration';
@@ -39,6 +38,7 @@ export function activate(context: vscode.ExtensionContext): void {
     ws.onDidCloseTextDocument((e: vscode.TextDocument) => {
         rubocop.clear(e);
     });
-    const formattingProvider = new RubocopAutocorrectProvider;
+    const formattingProvider = new RubocopAutocorrectProvider();
     vscode.languages.registerDocumentFormattingEditProvider('ruby', formattingProvider);
+    vscode.languages.registerDocumentFormattingEditProvider('gemfile', formattingProvider);
 }
