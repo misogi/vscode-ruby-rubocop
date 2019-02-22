@@ -7,9 +7,9 @@ import * as vsStub from 'vscode';
 // defined configuration options, and not depend on what is configured by the user
 const { getConfiguration: _getConfiguration } = vsStub.workspace;
 
-vsStub.workspace.getConfiguration = (namespace, ...args): any => {
-  if (namespace !== 'ruby.rubocop') {
-    return _getConfiguration(namespace, ...args);
+vsStub.workspace.getConfiguration = (section?: string, resource?: vsStub.Uri | null): any => {
+  if (section !== 'ruby.rubocop') {
+    return _getConfiguration(section, resource);
   }
 
   const defaultConfig = {
@@ -32,7 +32,9 @@ const extensionConfig = pq('../src/configuration', {
 
 const { RubocopConfig, getConfig } = extensionConfig;
 const canFindBundledCop = () => new Buffer('path/to/bundled/rubocop');
-const cannotFindBundledCop = () => { throw new Error('not found'); };
+const cannotFindBundledCop = () => {
+  throw new Error('not found');
+};
 
 describe('RubocopConfig', () => {
   describe('getConfig', () => {
