@@ -23,28 +23,29 @@ export const getConfig: () => RubocopConfig = () => {
     const win32 = process.platform === 'win32';
     const cmd = win32 ? 'rubocop.bat' : 'rubocop';
     const conf = vs.workspace.getConfiguration('ruby.rubocop');
-    let useBundler;
-    let path = conf.get('executePath', '');
+    let useBundler = conf.get('useBundler', false);
+    let configPath = conf.get('executePath', '');
     let command;
 
     // if executePath is present in workspace config, use it.
-    if (path.length !== 0) {
-        command = path + cmd;
-    } else if (detectBundledRubocop()) {
+    if (configPath.length !== 0) {
+        command = configPath + cmd;
+    } else if (useBundler || detectBundledRubocop()) {
         useBundler = true;
         command = `bundle exec ${cmd}`;
     } else {
-        path = autodetectExecutePath(cmd);
-        if (0 === path.length) {
+        const detectedPath = autodetectExecutePath(cmd);
+        if (0 === detectedPath.length) {
             vs.window.showWarningMessage('execute path is empty! please check ruby.rubocop.executePath');
         }
-        command = path + cmd;
+        command = detectedPath + cmd;
     }
+
     return {
-        useBundler,
         command,
         configFilePath: conf.get('configFilePath', ''),
         onSave: conf.get('onSave', true),
+        useBundler,
     };
 };
 

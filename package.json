@@ -72,6 +72,11 @@
           "type": "boolean",
           "default": true,
           "description": "execute rubocop on save."
+        },
+        "ruby.rubocop.useBundler": {
+          "type": "boolean",
+          "default": false,
+          "description": "execute rubocop using bundler (ie 'bundle exec rubocop')"
         }
       }
     }
