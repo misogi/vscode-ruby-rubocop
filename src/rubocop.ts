@@ -121,11 +121,10 @@ export class Rubocop {
 
         let onDidExec = (error: Error, stdout: string, stderr: string) => {
 
+            this.reportError(error, stderr);
             let rubocop = this.parse(stdout);
-            if (this.hasError(error, stderr)) {
-                if (rubocop === undefined || rubocop === null) {
+            if (rubocop === undefined || rubocop === null) {
                     return;
-                }
             }
 
             this.diag.delete(uri);
@@ -224,7 +223,7 @@ export class Rubocop {
     }
 
     // checking rubocop output has error
-    private hasError(error: Error, stderr: string): boolean {
+    private reportError(error: Error, stderr: string): boolean {
         let errorOutput = stderr.toString();
         if (error && (<any>error).code === 'ENOENT') {
             vscode.window.showWarningMessage(`${this.config.command} is not executable`);
