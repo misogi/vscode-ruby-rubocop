@@ -120,16 +120,15 @@ export class Rubocop {
         let currentPath = getCurrentPath(fileName);
 
         let onDidExec = (error: Error, stdout: string, stderr: string) => {
+
+            let rubocop = this.parse(stdout);
             if (this.hasError(error, stderr)) {
-                return;
+                if (rubocop === undefined || rubocop === null) {
+                    return;
+                }
             }
 
             this.diag.delete(uri);
-            let rubocop = this.parse(stdout);
-
-            if (rubocop === undefined || rubocop === null) {
-                return;
-            }
 
             let entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
             rubocop.files.forEach((file: RubocopFile) => {
