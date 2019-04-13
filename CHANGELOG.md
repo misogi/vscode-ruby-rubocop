@@ -1,3 +1,7 @@
+# 0.8.0
+
+- add useBundler config. We can set `true` to override to `bundle exec rubocop`
+
 # 0.7.1
 
 - Fix autoCorrection find on windows
