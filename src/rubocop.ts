@@ -110,7 +110,11 @@ export class Rubocop {
     }
 
     public execute(document: vscode.TextDocument, onComplete?: () => void): void {
-        if (document.languageId !== 'ruby' || document.isUntitled || !isFileUri(document.uri)) {
+        if (
+            (document.languageId !== 'gemfile' && document.languageId !== 'ruby') ||
+            document.isUntitled ||
+            !isFileUri(document.uri)
+        ) {
             // git diff has ruby-mode. but it is Untitled file.
             return;
         }
