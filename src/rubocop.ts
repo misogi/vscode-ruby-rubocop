@@ -41,12 +41,12 @@ export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEdit
 
 
     // Output of autocorrection looks like this:
-    // 
+    //
     // {"metadata": ... {"offense_count":5,"target_file_count":1,"inspected_file_count":1}}====================
     // def a
     //   3
     // end
-    // 
+    //
     // So we need to parse out the actual autocorrected ruby
     private onSuccess(document: vscode.TextDocument, stdout: Buffer) {
         const stringOut = stdout.toString()
@@ -237,8 +237,8 @@ export class Rubocop {
         } else if (error && (<any>error).code === 127) {
             vscode.window.showWarningMessage(stderr);
             return true;
-        } else if (errorOutput.length > 0) {
-            vscode.window.showErrorMessage(stderr);
+        } else if (errorOutput.length > 0 && !this.config.suppressRubocopWarnings) {
+            vscode.window.showWarningMessage(stderr);
             return true;
         }
 

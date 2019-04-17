@@ -17,6 +17,7 @@ vsStub.workspace.getConfiguration = (section?: string, resource?: vsStub.Uri | n
     executePath: '',
     onSave: true,
     useBundler: false,
+    suppressRubocopWarnings: false,
   };
 
   return {
@@ -51,6 +52,12 @@ describe('RubocopConfig', () => {
       it('is unset if a bundled rubocop is not found', () => {
         childProcessStub.execSync = cannotFindBundledCop;
         expect(getConfig()).to.have.property('useBundler', false);
+      });
+    });
+
+    describe('.suppressRubocopWarnings', () => {
+      it('is set to false', () => {
+        expect(getConfig()).to.have.property('suppressRubocopWarnings', false);
       });
     });
 
