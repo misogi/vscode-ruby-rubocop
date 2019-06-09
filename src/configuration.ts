@@ -9,6 +9,7 @@ export interface RubocopConfig {
     onSave: boolean;
     configFilePath: string;
     useBundler: boolean;
+    suppressRubocopWarnings: boolean
 }
 
 const detectBundledRubocop: () => boolean = () => {
@@ -48,6 +49,7 @@ export const getConfig: () => RubocopConfig = () => {
     const conf = vs.workspace.getConfiguration('ruby.rubocop');
     let useBundler = conf.get('useBundler', false);
     let configPath = conf.get('executePath', '');
+    let suppressRubocopWarnings = conf.get('suppressRubocopWarnings', false)
     let command;
 
     // if executePath is present in workspace config, use it.
@@ -69,6 +71,7 @@ export const getConfig: () => RubocopConfig = () => {
         configFilePath: conf.get('configFilePath', ''),
         onSave: conf.get('onSave', true),
         useBundler,
+        suppressRubocopWarnings,
     };
 };
 

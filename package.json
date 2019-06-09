@@ -83,6 +83,11 @@
           "type": "boolean",
           "default": false,
           "description": "execute rubocop using bundler (ie 'bundle exec rubocop')"
+        },
+        "ruby.rubocop.suppressRubocopWarnings": {
+          "type": "boolean",
+          "default": false,
+          "description": "Suppress warnings from rubocop and attempt to run regardless. (Useful if you share a rubocop.yml file and run into unrecognized cop errors you know are okay.)"
         }
       }
     }
