@@ -16,7 +16,7 @@ export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEdit
                 "--auto-correct"
             ];
             const options = {
-                cwd: getCurrentPath(document.fileName),
+                cwd: getCurrentPath(config, document.fileName),
                 input: document.getText()
             };
             let stdout;
@@ -74,8 +74,15 @@ function isFileUri(uri: vscode.Uri): boolean {
     return uri.scheme === 'file';
 }
 
-function getCurrentPath(fileName: string): string {
-    return vscode.workspace.rootPath || path.dirname(fileName);
+function getCurrentPath(config: RubocopConfig, fileName: string): string {
+  // we always want to use the relative path if we are
+  // using bundler as this allows for the app root to be
+  // a subdirectory of the project root.
+  if (config.useBundler) {
+    return path.dirname(fileName)
+  }
+
+  return vscode.workspace.rootPath || path.dirname(fileName);
 }
 
 // extract argument to an array
@@ -121,7 +128,7 @@ export class Rubocop {
 
         const fileName = document.fileName;
         const uri = document.uri;
-        let currentPath = getCurrentPath(fileName);
+        let currentPath = getCurrentPath(this.config, fileName);
 
         let onDidExec = (error: Error, stdout: string, stderr: string) => {
             if (this.hasError(error, stderr)) {
