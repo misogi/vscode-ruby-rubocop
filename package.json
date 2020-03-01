@@ -93,15 +93,15 @@
     }
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
+    "@types/chai": "^4.2.9",
     "@types/mocha": "^5.2.6",
-    "@types/node": "^11.11.6",
+    "@types/node": "^13.7.7",
     "chai": "^4.2.0",
     "mocha": "^6.0.2",
     "proxyquire": "^2.1.0",
     "sinon": "^7.3.0",
     "tslint": "^5.1.0",
-    "typescript": "3.3.4000",
+    "typescript": "^3.8.3",
     "typescript-formatter": "^7.2.2",
     "vscode": "^1.1.0"
   }
