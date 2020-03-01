@@ -6,30 +6,30 @@ Visual Studio Code でrubocopを実行するエクステンションです。
 
 This extension provides interfaces to rubocop for vscode.
 
-[rubocop](https://github.com/bbatsov/rubocop) is code analyzer for ruby.
+[rubocop](https://github.com/bbatsov/rubocop) is a code analyzer for ruby.
 
 [ruby rubocop in Code Market Place](https://marketplace.visualstudio.com/items/misogi.ruby-rubocop)
 
 ![exec on save](./images/onsave.gif)
 
-## problems
+## Problems
 
-This extension may have a problem when using a rvm or chruby environment.
+This extension may have problems when using a rvm or chruby environment.
 We recommend [vscode-ruby](https://marketplace.visualstudio.com/items?itemName=rebornix.Ruby). It can also lint ruby code.
 
-When autoCorrect, History of changing file is broken.
+When autoCorrect is enabled, the history of changing file is broken.
 
-## features
+## Features
 
-- lint by execute command "Ruby: lint by rubocop" (cmd+shift+p and type command)
+- lint by executing the command "Ruby: lint by rubocop" (cmd+shift+p and type command)
 - auto invoke when saving file
 - auto correct command "Ruby: autocorrect by rubocop"
 
 ### Exclude file
 
-An extension forces rubocop's `force-exclusion` option.
+The extension forces rubocop's `force-exclusion` option.
 
-If you want not to execute rubocop on some file, You could add AllCops/Exclude on rubocop.yml. This can saving without executing rubocop.
+If you do not want rubocop to be executed on some file, you can add AllCops/Exclude in rubocop.yml. The file can be saved without executing rubocop.
 
 # Installation
 
@@ -71,7 +71,7 @@ Specify configuration (via navigating to `File > Preferences > Workspace Setting
 
 ### Keybindings
 
-You can change keybinding (via editing `keybindings.json`)
+You can change the keybinding (via editing `keybindings.json`)
 
 ```javascript
 { "key": "ctrl+alt+l",          "command": "ruby.rubocopAutocorrect",
@@ -80,7 +80,7 @@ You can change keybinding (via editing `keybindings.json`)
 
 # todo
 
-- more configurable command line option (like -R)
+- more configurable command line options (like -R)
 - integration with rbenv
 - testing & CI support
 
