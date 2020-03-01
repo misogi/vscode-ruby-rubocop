@@ -1,6 +1,9 @@
-# 0.8.2
+# 0.8.3
 
 - Using relative config file path
+
+# 0.8.2
+
 - update packages that have secirity issues
 
 # 0.8.1
