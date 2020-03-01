@@ -1,3 +1,8 @@
+# 0.8.2
+
+- Using relative config file path
+- update packages that have secirity issues
+
 # 0.8.1
 
 - add `suppressRubocopWarnings` option that ignore warning
