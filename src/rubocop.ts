@@ -132,16 +132,14 @@ export class Rubocop {
         let currentPath = getCurrentPath(fileName);
 
         let onDidExec = (error: Error, stdout: string, stderr: string) => {
-            if (this.hasError(error, stderr)) {
-                return;
+
+            this.reportError(error, stderr);
+            let rubocop = this.parse(stdout);
+            if (rubocop === undefined || rubocop === null) {
+                    return;
             }
 
             this.diag.delete(uri);
-            let rubocop = this.parse(stdout);
-
-            if (rubocop === undefined || rubocop === null) {
-                return;
-            }
 
             let entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
             rubocop.files.forEach((file: RubocopFile) => {
@@ -237,7 +235,7 @@ export class Rubocop {
     }
 
     // checking rubocop output has error
-    private hasError(error: Error, stderr: string): boolean {
+    private reportError(error: Error, stderr: string): boolean {
         let errorOutput = stderr.toString();
         if (error && (<any>error).code === 'ENOENT') {
             vscode.window.showWarningMessage(`${this.config.command} is not executable`);
