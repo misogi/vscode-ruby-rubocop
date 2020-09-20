@@ -83,7 +83,7 @@ function getCommandArguments(fileName: string): string[] {
     let commandArguments = ['--stdin', fileName, '--format', 'json', '--force-exclusion'];
     const extensionConfig = getConfig();
     if (extensionConfig.configFilePath !== '') {
-      
+
       let found = [extensionConfig.configFilePath].concat(
         (vscode.workspace.workspaceFolders || []).map((ws: any) => path.join(ws.uri.path, extensionConfig.configFilePath))
       ).filter((p: string) => fs.existsSync(p));
@@ -197,7 +197,7 @@ export class Rubocop {
     private executeRubocop(
         args: string[],
         fileContents: string,
-        options: cp.ExecFileOptions,
+        options: cp.ExecOptions,
         cb: (err: Error, stdout: string, stderr: string) => void): cp.ChildProcess {
         let child;
         if (this.config.useBundler) {
