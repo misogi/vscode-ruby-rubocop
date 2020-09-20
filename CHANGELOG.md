@@ -1,3 +1,8 @@
+# 0.8.4
+
+- Ignore warnings and proceed if there is valid rubocop output
+- fix test
+
 # 0.8.3
 
 - Using relative config file path
