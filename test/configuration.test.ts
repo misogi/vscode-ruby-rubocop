@@ -7,7 +7,10 @@ import * as vsStub from 'vscode';
 // defined configuration options, and not depend on what is configured by the user
 const { getConfiguration: _getConfiguration } = vsStub.workspace;
 
-vsStub.workspace.getConfiguration = (section?: string, resource?: vsStub.Uri | null): any => {
+vsStub.workspace.getConfiguration = (
+  section?: string,
+  resource?: vsStub.Uri | null
+): any => {
   if (section !== 'ruby.rubocop') {
     return _getConfiguration(section, resource);
   }
@@ -21,7 +24,8 @@ vsStub.workspace.getConfiguration = (section?: string, resource?: vsStub.Uri | n
   };
 
   return {
-    get: <T>(section: string, defaultValue: T): T => defaultConfig[section] || defaultValue,
+    get: <T>(section: string, defaultValue: T): T =>
+      defaultConfig[section] || defaultValue,
   };
 };
 
@@ -64,7 +68,10 @@ describe('RubocopConfig', () => {
     describe('.command', () => {
       describe('win32 platform', () => {
         beforeEach(() => {
-          this.originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
+          this.originalPlatform = Object.getOwnPropertyDescriptor(
+            process,
+            'platform'
+          );
           Object.defineProperty(process, 'platform', {
             value: 'win32',
           });
@@ -75,7 +82,10 @@ describe('RubocopConfig', () => {
 
         it('is set to "bundle exec rubocop.bat" if bundled rubocop is present', () => {
           childProcessStub.execSync = canFindBundledCop;
-          expect(getConfig()).to.have.property('command', 'bundle exec rubocop.bat');
+          expect(getConfig()).to.have.property(
+            'command',
+            'bundle exec rubocop.bat'
+          );
         });
 
         it('is set to "rubocop.bat" otherwise', () => {
@@ -86,7 +96,10 @@ describe('RubocopConfig', () => {
 
       describe('non-win32 platform', () => {
         beforeEach(() => {
-          this.originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
+          this.originalPlatform = Object.getOwnPropertyDescriptor(
+            process,
+            'platform'
+          );
           Object.defineProperty(process, 'platform', {
             value: 'commodore64',
           });
@@ -97,7 +110,10 @@ describe('RubocopConfig', () => {
 
         it('is set to "bundle exec rubocop" if bundled rubocop is present', () => {
           childProcessStub.execSync = canFindBundledCop;
-          expect(getConfig()).to.have.property('command', 'bundle exec rubocop');
+          expect(getConfig()).to.have.property(
+            'command',
+            'bundle exec rubocop'
+          );
         });
 
         it('is set to "path/to/rubocop" otherwise', () => {

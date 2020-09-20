@@ -4,41 +4,47 @@ import { onDidChangeConfiguration } from './configuration';
 
 // entry point of extension
 export function activate(context: vscode.ExtensionContext): void {
-    'use strict';
+  'use strict';
 
-    const diag = vscode.languages.createDiagnosticCollection('ruby');
-    context.subscriptions.push(diag);
+  const diag = vscode.languages.createDiagnosticCollection('ruby');
+  context.subscriptions.push(diag);
 
-    const rubocop = new Rubocop(diag);
-    const disposable = vscode.commands.registerCommand('ruby.rubocop', () => {
-        const document = vscode.window.activeTextEditor.document;
-        rubocop.execute(document);
-    });
+  const rubocop = new Rubocop(diag);
+  const disposable = vscode.commands.registerCommand('ruby.rubocop', () => {
+    const document = vscode.window.activeTextEditor.document;
+    rubocop.execute(document);
+  });
 
-    context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable);
 
-    const ws = vscode.workspace;
+  const ws = vscode.workspace;
 
-    ws.onDidChangeConfiguration(onDidChangeConfiguration(rubocop));
+  ws.onDidChangeConfiguration(onDidChangeConfiguration(rubocop));
 
-    ws.textDocuments.forEach((e: vscode.TextDocument) => {
-        rubocop.execute(e);
-    });
+  ws.textDocuments.forEach((e: vscode.TextDocument) => {
+    rubocop.execute(e);
+  });
 
-    ws.onDidOpenTextDocument((e: vscode.TextDocument) => {
-        rubocop.execute(e);
-    });
+  ws.onDidOpenTextDocument((e: vscode.TextDocument) => {
+    rubocop.execute(e);
+  });
 
-    ws.onDidSaveTextDocument((e: vscode.TextDocument) => {
-        if (rubocop.isOnSave) {
-            rubocop.execute(e);
-        }
-    });
+  ws.onDidSaveTextDocument((e: vscode.TextDocument) => {
+    if (rubocop.isOnSave) {
+      rubocop.execute(e);
+    }
+  });
 
-    ws.onDidCloseTextDocument((e: vscode.TextDocument) => {
-        rubocop.clear(e);
-    });
-    const formattingProvider = new RubocopAutocorrectProvider();
-    vscode.languages.registerDocumentFormattingEditProvider('ruby', formattingProvider);
-    vscode.languages.registerDocumentFormattingEditProvider('gemfile', formattingProvider);
+  ws.onDidCloseTextDocument((e: vscode.TextDocument) => {
+    rubocop.clear(e);
+  });
+  const formattingProvider = new RubocopAutocorrectProvider();
+  vscode.languages.registerDocumentFormattingEditProvider(
+    'ruby',
+    formattingProvider
+  );
+  vscode.languages.registerDocumentFormattingEditProvider(
+    'gemfile',
+    formattingProvider
+  );
 }

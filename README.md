@@ -92,6 +92,12 @@ Please install packages with yarn.
 
 You could install TSLint extension for .ts files.
 
+Please format code using prettier.
+
+```
+yarn prettier src/* test/* --write
+```
+
 # License
 
 このソフトウェアは MIT ライセンスの元で公開されています。[LICENSE.txt](LICENSE.txt) をご覧下さい。
