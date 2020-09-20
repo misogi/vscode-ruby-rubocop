@@ -14,7 +14,7 @@ class TestTaskWrapper {
     this.task = new Task(url, (taskToken: TaskToken) => {
       this.isBodyCalled = true;
       this.token = taskToken;
-      return () => this.isCancelCallbackCalled = true;
+      return () => (this.isCancelCallbackCalled = true);
     });
   }
 }
@@ -38,7 +38,7 @@ describe('TaskQueue', () => {
       expect(queue.length).to.eq(1);
     });
 
-    it('can cancel running task', done => {
+    it('can cancel running task', (done) => {
       queue.enqueue(taskWrapper.task);
       queue.cancel(taskWrapper.url);
       expect(taskWrapper.isCancelCallbackCalled).to.be.true;
@@ -49,7 +49,7 @@ describe('TaskQueue', () => {
       }, 0);
     });
 
-    it('can finish task by calling finished()', done => {
+    it('can finish task by calling finished()', (done) => {
       queue.enqueue(taskWrapper.task);
       taskWrapper.token.finished();
       setTimeout(() => {
@@ -68,7 +68,7 @@ describe('TaskQueue', () => {
       expect(queue.length).to.eq(2);
     });
 
-    it('run next task when first one is canceled', done => {
+    it('run next task when first one is canceled', (done) => {
       queue.enqueue(taskWrapper.task);
       queue.enqueue(taskWrapper2.task);
       expect(taskWrapper2.isBodyCalled).to.be.false;
@@ -80,7 +80,7 @@ describe('TaskQueue', () => {
       }, 0);
     });
 
-    it('run next task when first one is finished', done => {
+    it('run next task when first one is finished', (done) => {
       queue.enqueue(taskWrapper.task);
       queue.enqueue(taskWrapper2.task);
       expect(taskWrapper2.isBodyCalled).to.be.false;
@@ -92,7 +92,7 @@ describe('TaskQueue', () => {
       }, 0);
     });
 
-    it('skip canceled task on selecting next task', done => {
+    it('skip canceled task on selecting next task', (done) => {
       let taskWrapper3 = new TestTaskWrapper(vscode.Uri.file('/path/to/file3'));
       queue.enqueue(taskWrapper.task);
       queue.enqueue(taskWrapper2.task);
@@ -109,7 +109,7 @@ describe('TaskQueue', () => {
   });
 
   context('when multiple tasks with same url are added to queue', () => {
-    it('cancels former task', done => {
+    it('cancels former task', (done) => {
       let anotherTaskWrapper = new TestTaskWrapper(taskWrapper.url);
       queue.enqueue(taskWrapper.task);
       expect(taskWrapper.isCancelCallbackCalled).to.be.false;

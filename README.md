@@ -2,7 +2,7 @@
 
 ![travis status](https://travis-ci.org/misogi/vscode-ruby-rubocop.svg?branch=master)
 
-Visual Studio Code でrubocopを実行するエクステンションです。
+Visual Studio Code で rubocop を実行するエクステンションです。
 
 This extension provides interfaces to rubocop for vscode.
 
@@ -92,12 +92,14 @@ Please install packages with yarn.
 
 You could install TSLint extension for .ts files.
 
-Formatting code using [vvakame/typescript-formatter](https://github.com/vvakame/typescript-formatter)
+Please format code using prettier.
 
-    tsfmt -r src/*
+```
+yarn prettier src/* test/* --write
+```
 
 # License
 
-このソフトウェアはMITライセンスの元で公開されています。[LICENSE.txt](LICENSE.txt) をご覧下さい。
+このソフトウェアは MIT ライセンスの元で公開されています。[LICENSE.txt](LICENSE.txt) をご覧下さい。
 
 This software is released under the MIT License, see [LICENSE.txt](LICENSE.txt).
