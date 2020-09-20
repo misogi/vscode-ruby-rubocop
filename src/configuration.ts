@@ -9,44 +9,8 @@ export interface RubocopConfig {
     onSave: boolean;
     configFilePath: string;
     useBundler: boolean;
+    suppressRubocopWarnings: boolean
 }
-
-export const onDidChangeConfiguration: (rubocop: Rubocop) => () => void = (rubocop) => {
-    return () => rubocop.config = getConfig();
-};
-
-/**
- * Read the workspace configuration for 'ruby.rubocop' and return a RubocopConfig.
- * @return {RubocopConfig} config object
- */
-export const getConfig: () => RubocopConfig = () => {
-    const win32 = process.platform === 'win32';
-    const cmd = win32 ? 'rubocop.bat' : 'rubocop';
-    const conf = vs.workspace.getConfiguration('ruby.rubocop');
-    let useBundler;
-    let path = conf.get('executePath', '');
-    let command;
-
-    // if executePath is present in workspace config, use it.
-    if (path.length !== 0) {
-        command = path + cmd;
-    } else if (detectBundledRubocop()) {
-        useBundler = true;
-        command = `bundle exec ${cmd}`;
-    } else {
-        path = autodetectExecutePath(cmd);
-        if (0 === path.length) {
-            vs.window.showWarningMessage('execute path is empty! please check ruby.rubocop.executePath');
-        }
-        command = path + cmd;
-    }
-    return {
-        useBundler,
-        command,
-        configFilePath: conf.get('configFilePath', ''),
-        onSave: conf.get('onSave', true),
-    };
-};
 
 const detectBundledRubocop: () => boolean = () => {
     try {
@@ -57,7 +21,7 @@ const detectBundledRubocop: () => boolean = () => {
     }
 };
 
-const autodetectExecutePath: (cmd: string) => string = (cmd) => {
+const autodetectExecutePath: (cmd: string) => string = cmd => {
     const key: string = 'PATH';
     let paths = process.env[key];
     if (!paths) {
@@ -73,4 +37,44 @@ const autodetectExecutePath: (cmd: string) => string = (cmd) => {
     }
 
     return '';
+};
+
+/**
+ * Read the workspace configuration for 'ruby.rubocop' and return a RubocopConfig.
+ * @return {RubocopConfig} config object
+ */
+export const getConfig: () => RubocopConfig = () => {
+    const win32 = process.platform === 'win32';
+    const cmd = win32 ? 'rubocop.bat' : 'rubocop';
+    const conf = vs.workspace.getConfiguration('ruby.rubocop');
+    let useBundler = conf.get('useBundler', false);
+    let configPath = conf.get('executePath', '');
+    let suppressRubocopWarnings = conf.get('suppressRubocopWarnings', false)
+    let command;
+
+    // if executePath is present in workspace config, use it.
+    if (configPath.length !== 0) {
+        command = configPath + cmd;
+    } else if (useBundler || detectBundledRubocop()) {
+        useBundler = true;
+        command = `bundle exec ${cmd}`;
+    } else {
+        const detectedPath = autodetectExecutePath(cmd);
+        if (0 === detectedPath.length) {
+            vs.window.showWarningMessage('execute path is empty! please check ruby.rubocop.executePath');
+        }
+        command = detectedPath + cmd;
+    }
+
+    return {
+        command,
+        configFilePath: conf.get('configFilePath', ''),
+        onSave: conf.get('onSave', true),
+        useBundler,
+        suppressRubocopWarnings,
+    };
+};
+
+export const onDidChangeConfiguration: (rubocop: Rubocop) => () => void = rubocop => {
+    return () => (rubocop.config = getConfig());
 };

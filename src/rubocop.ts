@@ -41,12 +41,12 @@ export class RubocopAutocorrectProvider implements vscode.DocumentFormattingEdit
 
 
     // Output of autocorrection looks like this:
-    // 
+    //
     // {"metadata": ... {"offense_count":5,"target_file_count":1,"inspected_file_count":1}}====================
     // def a
     //   3
     // end
-    // 
+    //
     // So we need to parse out the actual autocorrected ruby
     private onSuccess(document: vscode.TextDocument, stdout: Buffer) {
         const stringOut = stdout.toString()
@@ -83,13 +83,21 @@ function getCommandArguments(fileName: string): string[] {
     let commandArguments = ['--stdin', fileName, '--format', 'json', '--force-exclusion'];
     const extensionConfig = getConfig();
     if (extensionConfig.configFilePath !== '') {
-        if (fs.existsSync(extensionConfig.configFilePath)) {
-            const config = ['--config', extensionConfig.configFilePath];
-            commandArguments = commandArguments.concat(config);
-        } else {
-            vscode.window.showWarningMessage(`${extensionConfig.configFilePath} file does not exist. Ignoring...`);
+
+      let found = [extensionConfig.configFilePath].concat(
+        (vscode.workspace.workspaceFolders || []).map((ws: any) => path.join(ws.uri.path, extensionConfig.configFilePath))
+      ).filter((p: string) => fs.existsSync(p));
+
+      if (found.length == 0) {
+        vscode.window.showWarningMessage(`${extensionConfig.configFilePath} file does not exist. Ignoring...`);
+      } else {
+        if (found.length > 1) {
+          vscode.window.showWarningMessage(`Found multiple files (${found}) will use ${found[0]}`);
         }
-    }
+        const config = ['--config', found[0]];
+        commandArguments = commandArguments.concat(config);
+      }
+  }
 
     return commandArguments;
 }
@@ -110,7 +118,11 @@ export class Rubocop {
     }
 
     public execute(document: vscode.TextDocument, onComplete?: () => void): void {
-        if (document.languageId !== 'ruby' || document.isUntitled || !isFileUri(document.uri)) {
+        if (
+            (document.languageId !== 'gemfile' && document.languageId !== 'ruby') ||
+            document.isUntitled ||
+            !isFileUri(document.uri)
+        ) {
             // git diff has ruby-mode. but it is Untitled file.
             return;
         }
@@ -183,7 +195,7 @@ export class Rubocop {
     private executeRubocop(
         args: string[],
         fileContents: string,
-        options: cp.ExecFileOptions,
+        options: cp.ExecOptions,
         cb: (err: Error, stdout: string, stderr: string) => void): cp.ChildProcess {
         let child;
         if (this.config.useBundler) {
@@ -231,8 +243,8 @@ export class Rubocop {
         } else if (error && (<any>error).code === 127) {
             vscode.window.showWarningMessage(stderr);
             return true;
-        } else if (errorOutput.length > 0) {
-            vscode.window.showErrorMessage(stderr);
+        } else if (errorOutput.length > 0 && !this.config.suppressRubocopWarnings) {
+            vscode.window.showWarningMessage(stderr);
             return true;
         }
 

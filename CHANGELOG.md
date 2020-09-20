@@ -1,3 +1,19 @@
+# 0.8.3
+
+- Using relative config file path
+
+# 0.8.2
+
+- update packages that have secirity issues
+
+# 0.8.1
+
+- add `suppressRubocopWarnings` option that ignore warning
+
+# 0.8.0
+
+- add useBundler config. We can set `true` to override to `bundle exec rubocop`
+
 # 0.7.1
 
 - Fix autoCorrection find on windows
