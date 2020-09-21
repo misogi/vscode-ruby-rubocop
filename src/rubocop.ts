@@ -16,7 +16,7 @@ export class RubocopAutocorrectProvider
     try {
       const args = [
         ...getCommandArguments(document.fileName),
-        '--auto-correct',
+        '--auto-correct-all',
       ];
       const options = {
         cwd: getCurrentPath(document.fileName),
