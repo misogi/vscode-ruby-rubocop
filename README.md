@@ -33,10 +33,10 @@ If you do not want rubocop to be executed on some file, you can add AllCops/Excl
 
 # Installation
 
-Installation of ruby and rubocop is required.
+Installation of ruby and rubocop version 0.86 is required.
 
 ```
-gem install rubocop
+gem install rubocop --version 0.86
 ```
 
 - Type F1 (or Command + Shift + P)
