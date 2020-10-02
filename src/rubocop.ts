@@ -55,7 +55,7 @@ export class RubocopAutocorrectProvider
   private onSuccess(document: vscode.TextDocument, stdout: Buffer) {
     const stringOut = stdout.toString();
     const autoCorrection = stringOut.match(
-      /^{.*}====================(?:\n|\r\n)([.\s\S]*)/m
+      /^.*\n====================(?:\n|\r\n)([.\s\S]*)/m
     );
     if (!autoCorrection) {
       throw new Error(`Error parsing autocorrection from CLI: ${stringOut}`);
@@ -86,8 +86,6 @@ function getCommandArguments(fileName: string): string[] {
   let commandArguments = [
     '--stdin',
     fileName,
-    '--format',
-    'json',
     '--force-exclusion',
   ];
   const extensionConfig = getConfig();
@@ -178,7 +176,8 @@ export class Rubocop {
       this.diag.set(entries);
     };
 
-    const args = getCommandArguments(fileName).concat(this.additionalArguments);
+    const jsonOutputFormat = ['--format', 'json']
+    const args = getCommandArguments(fileName).concat(this.additionalArguments).concat(jsonOutputFormat);
 
     let task = new Task(uri, (token) => {
       let process = this.executeRubocop(
