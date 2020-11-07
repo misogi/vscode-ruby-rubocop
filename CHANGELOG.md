@@ -1,3 +1,7 @@
+# 0.8.5
+
+- work with rubocop over 0.90
+
 # 0.8.4
 
 - Ignore warnings and proceed if there is valid rubocop output
