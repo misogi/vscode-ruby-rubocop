@@ -31,10 +31,10 @@ export class RubocopAutocorrectProvider
 
       return this.onSuccess(document, stdout);
     } catch (e) {
-      // if there are still some offences not fixed rubocop will return status 1
+      // if there are still some offences not fixed RuboCop will return status 1
       if (e.status !== 1) {
         vscode.window.showWarningMessage(
-          'An error occured during autocorrection'
+          'An error occurred during auto-correction'
         );
         console.log(e);
         return [];
@@ -44,21 +44,21 @@ export class RubocopAutocorrectProvider
     }
   }
 
-  // Output of autocorrection looks like this:
+  // Output of auto-correction looks like this:
   //
   // {"metadata": ... {"offense_count":5,"target_file_count":1,"inspected_file_count":1}}====================
   // def a
   //   3
   // end
   //
-  // So we need to parse out the actual autocorrected ruby
+  // So we need to parse out the actual auto-corrected ruby
   private onSuccess(document: vscode.TextDocument, stdout: Buffer) {
     const stringOut = stdout.toString();
     const autoCorrection = stringOut.match(
       /^.*\n====================(?:\n|\r\n)([.\s\S]*)/m
     );
     if (!autoCorrection) {
-      throw new Error(`Error parsing autocorrection from CLI: ${stringOut}`);
+      throw new Error(`Error parsing auto-correction from CLI: ${stringOut}`);
     }
     return [
       new vscode.TextEdit(this.getFullRange(document), autoCorrection.pop()),
