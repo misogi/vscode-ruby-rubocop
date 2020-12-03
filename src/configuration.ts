@@ -54,6 +54,10 @@ export const getConfig: () => RubocopConfig = () => {
 
   // if executePath is present in workspace config, use it.
   if (configPath.length !== 0) {
+    var delimiter = win32 ? '\\' : '/';
+    if (!configPath.endsWith(delimiter)){
+      configPath += delimiter;
+    }
     command = configPath + cmd;
   } else if (useBundler || detectBundledRubocop()) {
     useBundler = true;
