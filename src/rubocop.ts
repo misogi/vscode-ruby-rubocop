@@ -78,7 +78,10 @@ function isFileUri(uri: vscode.Uri): boolean {
 }
 
 function getCurrentPath(fileName: string): string {
-  return vscode.workspace.rootPath || path.dirname(fileName);
+  const wsfolder = vscode.workspace.getWorkspaceFolder(
+    vscode.Uri.file(fileName)
+  );
+  return (wsfolder && wsfolder.uri.fsPath) || path.dirname(fileName);
 }
 
 // extract argument to an array
