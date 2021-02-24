@@ -43,6 +43,11 @@ gem install rubocop
 - execute "Extensions: install extension"
 - type rubocop and execute `ext install ruby-rubocop`
 
+If VSCode market place is not configured in your FLOSS distribution of code (you have Open VSX instead):
+
+1. Go on [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=misogi.ruby-rubocop) and clic on the [Download Extension](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/misogi/vsextensions/ruby-rubocop/0.8.5/vspackage) button.
+2. Install the extension manually from the CLI: `code --install-extension misogi.ruby-rubocop-0.8.5.vsix`
+
 # ChangeLog
 
 [ChangeLog](CHANGELOG.md)
