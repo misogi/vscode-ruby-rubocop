@@ -86,9 +86,11 @@ function getCommandArguments(fileName: string): string[] {
   let commandArguments = [
     '--stdin',
     fileName,
-    '--force-exclusion',
   ];
   const extensionConfig = getConfig();
+  if (extensionConfig.forceExclusion) {
+    commandArguments = commandArguments.concat(['--force-exclusion']);
+  }
   if (extensionConfig.configFilePath !== '') {
     let found = [extensionConfig.configFilePath]
       .concat(

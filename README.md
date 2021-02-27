@@ -27,9 +27,11 @@ When autoCorrect is enabled, the history of changing file is broken.
 
 ### Exclude file
 
-The extension forces rubocop's `force-exclusion` option.
+By default, the extension forces rubocop's `force-exclusion` option.
 
-If you do not want rubocop to be executed on some file, you can add AllCops/Exclude in rubocop.yml. The file can be saved without executing rubocop.
+If you do not want rubocop to be executed on some file, you can either :
+- add AllCops/Exclude in rubocop.yml. The file can be saved without executing rubocop, or
+- set `"ruby.rubocop.forceExclusion"` to `false`
 
 # Installation
 
@@ -65,7 +67,10 @@ Specify configuration (via navigating to `File > Preferences > Workspace Setting
   "ruby.rubocop.configFilePath": "/path/to/config/.rubocop.yml",
 
   // default true
-  "ruby.rubocop.onSave": true
+  "ruby.rubocop.onSave": true,
+
+  // default true
+  "ruby.rubocop.forceExclusion": true
 }
 ```
 
