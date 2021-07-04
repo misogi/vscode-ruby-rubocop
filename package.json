@@ -88,6 +88,11 @@
           "type": "boolean",
           "default": false,
           "description": "Suppress warnings from rubocop and attempt to run regardless. (Useful if you share a rubocop.yml file and run into unrecognized cop errors you know are okay.)"
+        },
+        "ruby.rubocop.enableUnsafeAutoCorrection": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable unsafe auto-correction using --auto-correct-all rubocop's flag"
         }
       }
     }

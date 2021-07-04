@@ -65,7 +65,10 @@ Specify configuration (via navigating to `File > Preferences > Workspace Setting
   "ruby.rubocop.configFilePath": "/path/to/config/.rubocop.yml",
 
   // default true
-  "ruby.rubocop.onSave": true
+  "ruby.rubocop.onSave": true,
+
+  // default false
+  "ruby.rubocop.enableUnsafeAutoCorrection": false
 }
 ```
 
