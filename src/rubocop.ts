@@ -280,6 +280,7 @@ export class Rubocop {
       case 'refactor':
         return vscode.DiagnosticSeverity.Hint;
       case 'convention':
+      case 'info':
         return vscode.DiagnosticSeverity.Information;
       case 'warning':
         return vscode.DiagnosticSeverity.Warning;
