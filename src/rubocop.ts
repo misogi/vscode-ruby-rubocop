@@ -89,28 +89,21 @@ function getCommandArguments(fileName: string): string[] {
     '--force-exclusion',
   ];
   const extensionConfig = getConfig();
-  if (extensionConfig.configFilePath !== '') {
-    let found = [extensionConfig.configFilePath]
-      .concat(
-        (vscode.workspace.workspaceFolders || []).map((ws: any) =>
-          path.join(ws.uri.path, extensionConfig.configFilePath)
-        )
-      )
-      .filter((p: string) => fs.existsSync(p));
+  let found = [extensionConfig.configFilePath, '.rubocop.yml']
+    .filter((p: string) => fs.existsSync(p));
 
-    if (found.length == 0) {
+  if (found.length == 0) {
+    vscode.window.showWarningMessage(
+      `${extensionConfig.configFilePath} file does not exist. Ignoring...`
+    );
+  } else {
+    if (found.length > 1) {
       vscode.window.showWarningMessage(
-        `${extensionConfig.configFilePath} file does not exist. Ignoring...`
+        `Found multiple files (${found}) will use ${found[0]}`
       );
-    } else {
-      if (found.length > 1) {
-        vscode.window.showWarningMessage(
-          `Found multiple files (${found}) will use ${found[0]}`
-        );
-      }
-      const config = ['--config', found[0]];
-      commandArguments = commandArguments.concat(config);
     }
+    const config = ['--config', found[0]];
+    commandArguments = commandArguments.concat(config);
   }
 
   return commandArguments;
