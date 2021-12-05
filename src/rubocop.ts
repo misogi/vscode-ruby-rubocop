@@ -5,7 +5,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { getConfig, RubocopConfig } from './configuration';
-import * as os from 'os';
 
 export class RubocopAutocorrectProvider
   implements vscode.DocumentFormattingEditProvider {
@@ -91,7 +90,7 @@ function getCommandArguments(fileName: string): string[] {
   ];
   const extensionConfig = getConfig();
   if (extensionConfig.configFilePath !== '') {
-    let found = [extensionConfig.configFilePath]
+    const found = [extensionConfig.configFilePath]
       .concat(
         (vscode.workspace.workspaceFolders || []).map((ws: any) =>
           path.join(ws.uri.path, extensionConfig.configFilePath)
@@ -144,20 +143,20 @@ export class Rubocop {
 
     const fileName = document.fileName;
     const uri = document.uri;
-    let currentPath = getCurrentPath(uri);
+    const currentPath = getCurrentPath(uri);
 
-    let onDidExec = (error: Error, stdout: string, stderr: string) => {
+    const onDidExec = (error: Error, stdout: string, stderr: string) => {
       this.reportError(error, stderr);
-      let rubocop = this.parse(stdout);
+      const rubocop = this.parse(stdout);
       if (rubocop === undefined || rubocop === null) {
         return;
       }
 
       this.diag.delete(uri);
 
-      let entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
+      const entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
       rubocop.files.forEach((file: RubocopFile) => {
-        let diagnostics = [];
+        const diagnostics = [];
         file.offenses.forEach((offence: RubocopOffense) => {
           const loc = offence.location;
           const range = new vscode.Range(
@@ -180,8 +179,8 @@ export class Rubocop {
     const jsonOutputFormat = ['--format', 'json']
     const args = getCommandArguments(fileName).concat(this.additionalArguments).concat(jsonOutputFormat);
 
-    let task = new Task(uri, (token) => {
-      let process = this.executeRubocop(
+    const task = new Task(uri, (token) => {
+      const process = this.executeRubocop(
         args,
         document.getText(),
         { cwd: currentPath },
@@ -206,7 +205,7 @@ export class Rubocop {
   }
 
   public clear(document: vscode.TextDocument): void {
-    let uri = document.uri;
+    const uri = document.uri;
     if (isFileUri(uri)) {
       this.taskQueue.cancel(uri);
       this.diag.delete(uri);
@@ -235,7 +234,7 @@ export class Rubocop {
   private parse(output: string): RubocopOutput | null {
     let rubocop: RubocopOutput;
     if (output.length < 1) {
-      let message = `command ${this.config.command} returns empty output! please check configuration.`;
+      const message = `command ${this.config.command} returns empty output! please check configuration.`;
       vscode.window.showWarningMessage(message);
 
       return null;
@@ -245,9 +244,9 @@ export class Rubocop {
       rubocop = JSON.parse(output);
     } catch (e) {
       if (e instanceof SyntaxError) {
-        let regex = /[\r\n \t]/g;
-        let message = output.replace(regex, ' ');
-        let errorMessage = `Error on parsing output (It might non-JSON output) : "${message}"`;
+        const regex = /[\r\n \t]/g;
+        const message = output.replace(regex, ' ');
+        const errorMessage = `Error on parsing output (It might non-JSON output) : "${message}"`;
         vscode.window.showWarningMessage(errorMessage);
 
         return null;
@@ -259,7 +258,7 @@ export class Rubocop {
 
   // checking rubocop output has error
   private reportError(error: Error, stderr: string): boolean {
-    let errorOutput = stderr.toString();
+    const errorOutput = stderr.toString();
     if (error && (<any>error).code === 'ENOENT') {
       vscode.window.showWarningMessage(
         `${this.config.command} is not executable`
