@@ -7,7 +7,8 @@ import * as vscode from 'vscode';
 import { getConfig, RubocopConfig } from './configuration';
 
 export class RubocopAutocorrectProvider
-  implements vscode.DocumentFormattingEditProvider {
+  implements vscode.DocumentFormattingEditProvider
+{
   public provideDocumentFormattingEdits(
     document: vscode.TextDocument
   ): vscode.TextEdit[] {
@@ -83,11 +84,7 @@ function getCurrentPath(fileUri: vscode.Uri): string {
 
 // extract argument to an array
 function getCommandArguments(fileName: string): string[] {
-  let commandArguments = [
-    '--stdin',
-    fileName,
-    '--force-exclusion',
-  ];
+  let commandArguments = ['--stdin', fileName, '--force-exclusion'];
   const extensionConfig = getConfig();
   if (extensionConfig.configFilePath !== '') {
     const found = [extensionConfig.configFilePath]
@@ -176,8 +173,10 @@ export class Rubocop {
       this.diag.set(entries);
     };
 
-    const jsonOutputFormat = ['--format', 'json']
-    const args = getCommandArguments(fileName).concat(this.additionalArguments).concat(jsonOutputFormat);
+    const jsonOutputFormat = ['--format', 'json'];
+    const args = getCommandArguments(fileName)
+      .concat(this.additionalArguments)
+      .concat(jsonOutputFormat);
 
     const task = new Task(uri, (token) => {
       const process = this.executeRubocop(
