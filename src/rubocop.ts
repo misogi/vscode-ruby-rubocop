@@ -19,7 +19,7 @@ export class RubocopAutocorrectProvider
         '--auto-correct',
       ];
       const options = {
-        cwd: getCurrentPath(document.fileName),
+        cwd: getCurrentPath(document.uri),
         input: document.getText(),
       };
       let stdout;
@@ -77,8 +77,9 @@ function isFileUri(uri: vscode.Uri): boolean {
   return uri.scheme === 'file';
 }
 
-function getCurrentPath(fileName: string): string {
-  return vscode.workspace.rootPath || path.dirname(fileName);
+function getCurrentPath(fileUri: vscode.Uri): string {
+  const wsfolder = vscode.workspace.getWorkspaceFolder(fileUri);
+  return (wsfolder && wsfolder.uri.fsPath) || path.dirname(fileUri.fsPath);
 }
 
 // extract argument to an array
@@ -143,7 +144,7 @@ export class Rubocop {
 
     const fileName = document.fileName;
     const uri = document.uri;
-    let currentPath = getCurrentPath(fileName);
+    let currentPath = getCurrentPath(uri);
 
     let onDidExec = (error: Error, stdout: string, stderr: string) => {
       this.reportError(error, stderr);
