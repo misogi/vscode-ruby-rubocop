@@ -6,8 +6,8 @@ class TestTaskWrapper {
   public readonly url: vscode.Uri;
   public readonly task: Task;
   public token?: TaskToken;
-  public isBodyCalled: boolean = false;
-  public isCancelCallbackCalled: boolean = false;
+  public isBodyCalled = false;
+  public isCancelCallbackCalled = false;
 
   constructor(url: vscode.Uri) {
     this.url = url;
@@ -93,7 +93,7 @@ describe('TaskQueue', () => {
     });
 
     it('skip canceled task on selecting next task', (done) => {
-      let taskWrapper3 = new TestTaskWrapper(vscode.Uri.file('/path/to/file3'));
+      const taskWrapper3 = new TestTaskWrapper(vscode.Uri.file('/path/to/file3'));
       queue.enqueue(taskWrapper.task);
       queue.enqueue(taskWrapper2.task);
       queue.enqueue(taskWrapper3.task);
@@ -110,7 +110,7 @@ describe('TaskQueue', () => {
 
   context('when multiple tasks with same url are added to queue', () => {
     it('cancels former task', (done) => {
-      let anotherTaskWrapper = new TestTaskWrapper(taskWrapper.url);
+      const anotherTaskWrapper = new TestTaskWrapper(taskWrapper.url);
       queue.enqueue(taskWrapper.task);
       expect(taskWrapper.isCancelCallbackCalled).to.be.false;
       queue.enqueue(anotherTaskWrapper.task);

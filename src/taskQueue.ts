@@ -13,9 +13,9 @@ export type CancelCallback = () => void;
  */
 export class Task {
   public readonly uri: vscode.Uri;
-  public isEnqueued: boolean = false;
+  public isEnqueued = false;
   private body: (token: TaskToken) => CancelCallback;
-  private isCanceled: boolean = false;
+  private isCanceled = false;
   private resolver?: () => void;
   private onCancel?: CancelCallback;
 
@@ -33,10 +33,11 @@ export class Task {
     if (this.isCanceled) {
       return;
     }
-    let task = this;
-    return new Promise<void>((resolve, reject) => {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const task = this;
+    return new Promise<void>((resolve) => {
       task.resolver = () => resolve();
-      let token = {
+      const token = {
         get isCanceled(): boolean {
           return task.isCanceled;
         },
@@ -75,7 +76,7 @@ export class Task {
  */
 export class TaskQueue {
   private tasks: Task[] = [];
-  private busy: boolean = false;
+  private busy = false;
 
   public get length(): number {
     return this.tasks.length;
@@ -92,7 +93,7 @@ export class TaskQueue {
   }
 
   public cancel(uri: vscode.Uri): void {
-    let uriString = uri.toString(true);
+    const uriString = uri.toString(true);
     this.tasks.forEach((task) => {
       if (task.uri.toString(true) === uriString) {
         task.cancel();
@@ -105,8 +106,9 @@ export class TaskQueue {
       return;
     }
     this.busy = true;
+    // eslint-disable-next-line  no-constant-condition
     while (true) {
-      let task: Task | undefined = this.tasks[0];
+      const task: Task | undefined = this.tasks[0];
       if (!task) {
         this.busy = false;
         return;
