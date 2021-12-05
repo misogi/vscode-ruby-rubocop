@@ -25,7 +25,7 @@
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "format": "tsfmt -r src/*",
+    "format": "prettier src test --write",
     "lint": "eslint src test --ext ts",
     "pretest": "yarn run compile && yarn run lint",
     "test": "node ./out/test/runTest.js"
@@ -110,7 +110,6 @@
     "mocha": "^9.1.3",
     "prettier": "^2.5.1",
     "proxyquire": "^2.1.0",
-    "sinon": "^12.0.1",
     "typescript": "^4.5.2",
     "vscode-test": "^1.6.1"
   }

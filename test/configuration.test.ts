@@ -9,7 +9,8 @@ const { getConfiguration: _getConfiguration } = vsStub.workspace;
 vsStub.workspace.getConfiguration = (
   section?: string,
   resource?: vsStub.Uri | null
-): any => { // FIXME: we should replace only get 
+): any => {
+  // FIXME: we should replace only get
   if (section !== 'ruby.rubocop') {
     return _getConfiguration(section, resource);
   }
