@@ -1,3 +1,8 @@
+# 0.8.6
+
+- Info level cops are displayed as info level
+- (internal) eliminate deprecated API
+
 # 0.8.5
 
 - work with rubocop over 0.90
