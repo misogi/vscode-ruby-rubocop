@@ -29,7 +29,7 @@ vsStub.workspace.getConfiguration = (
   };
 };
 
-const childProcessStub: any = {};
+const childProcessStub = { execSync: undefined };
 const extensionConfig = pq('../src/configuration', {
   child_process: childProcessStub,
   vscode: vsStub,

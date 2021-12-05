@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { getConfig, RubocopConfig } from './configuration';
+import { ExecFileException } from 'child_process';
 
 export class RubocopAutocorrectProvider
   implements vscode.DocumentFormattingEditProvider
@@ -89,7 +90,7 @@ function getCommandArguments(fileName: string): string[] {
   if (extensionConfig.configFilePath !== '') {
     const found = [extensionConfig.configFilePath]
       .concat(
-        (vscode.workspace.workspaceFolders || []).map((ws: any) =>
+        (vscode.workspace.workspaceFolders || []).map((ws) =>
           path.join(ws.uri.path, extensionConfig.configFilePath)
         )
       )
@@ -256,14 +257,14 @@ export class Rubocop {
   }
 
   // checking rubocop output has error
-  private reportError(error: Error, stderr: string): boolean {
+  private reportError(error: ExecFileException, stderr: string): boolean {
     const errorOutput = stderr.toString();
-    if (error && (<any>error).code === 'ENOENT') {
+    if (error && error.code === 'ENOENT') {
       vscode.window.showWarningMessage(
         `${this.config.command} is not executable`
       );
       return true;
-    } else if (error && (<any>error).code === 127) {
+    } else if (error && error.code === 127) {
       vscode.window.showWarningMessage(stderr);
       return true;
     } else if (errorOutput.length > 0 && !this.config.suppressRubocopWarnings) {
