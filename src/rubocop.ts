@@ -16,7 +16,9 @@ export class RubocopAutocorrectProvider
     try {
       const args = [
         ...getCommandArguments(document.fileName),
-        '--auto-correct',
+        config.enableUnsafeAutoCorrection ?
+          '--auto-correct-all'
+          : '--auto-correct',
       ];
       const options = {
         cwd: getCurrentPath(document.uri),

@@ -21,6 +21,7 @@ vsStub.workspace.getConfiguration = (
     onSave: true,
     useBundler: false,
     suppressRubocopWarnings: false,
+    enableUnsafeAutoCorrection: false,
   };
 
   return {
@@ -62,6 +63,12 @@ describe('RubocopConfig', () => {
     describe('.suppressRubocopWarnings', () => {
       it('is set to false', () => {
         expect(getConfig()).to.have.property('suppressRubocopWarnings', false);
+      });
+    });
+
+    describe('.enableUnsafeAutoCorrection', () => {
+      it('is set to false', () => {
+        expect(getConfig()).to.have.property('enableUnsafeAutoCorrection', false);
       });
     });
 
