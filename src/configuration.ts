@@ -22,15 +22,15 @@ const detectBundledRubocop: () => boolean = () => {
 };
 
 const autodetectExecutePath: (cmd: string) => string = (cmd) => {
-  const key: string = 'PATH';
-  let paths = process.env[key];
+  const key = 'PATH';
+  const paths = process.env[key];
   if (!paths) {
     return '';
   }
 
-  let pathparts = paths.split(path.delimiter);
+  const pathparts = paths.split(path.delimiter);
   for (let i = 0; i < pathparts.length; i++) {
-    let binpath = path.join(pathparts[i], cmd);
+    const binpath = path.join(pathparts[i], cmd);
     if (fs.existsSync(binpath)) {
       return pathparts[i] + path.sep;
     }
@@ -48,9 +48,9 @@ export const getConfig: () => RubocopConfig = () => {
   const cmd = win32 ? 'rubocop.bat' : 'rubocop';
   const conf = vs.workspace.getConfiguration('ruby.rubocop');
   let useBundler = conf.get('useBundler', false);
-  let configPath = conf.get('executePath', '');
-  let suppressRubocopWarnings = conf.get('suppressRubocopWarnings', false);
-  let command;
+  const configPath = conf.get('executePath', '');
+  const suppressRubocopWarnings = conf.get('suppressRubocopWarnings', false);
+  let command: string;
 
   // if executePath is present in workspace config, use it.
   if (configPath.length !== 0) {

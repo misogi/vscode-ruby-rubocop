@@ -1,11 +1,11 @@
 {
   "name": "ruby-rubocop",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "publisher": "misogi",
   "displayName": "ruby-rubocop",
   "description": "execute rubocop for current Ruby code.",
   "engines": {
-    "vscode": "^1.32.0"
+    "vscode": "^1.62.0"
   },
   "icon": "images/rubocop.png",
   "repository": {
@@ -22,11 +22,13 @@
   ],
   "main": "./out/src/extension",
   "scripts": {
-    "vscode:prepublish": "tsc -p ./",
-    "format": "tsfmt -r src/*",
-    "compile": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test"
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "format": "prettier src test --write",
+    "lint": "eslint src test --ext ts",
+    "pretest": "yarn run compile && yarn run lint",
+    "test": "node ./out/test/runTest.js"
   },
   "contributes": {
     "languages": [
@@ -93,16 +95,22 @@
     }
   },
   "devDependencies": {
-    "@types/chai": "^4.2.9",
-    "@types/mocha": "^5.2.6",
-    "@types/node": "^13.7.7",
-    "chai": "^4.2.0",
-    "mocha": "^6.0.2",
-    "prettier": "^2.1.2",
+    "@types/chai": "^4.2.22",
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "14.x",
+    "@types/proxyquire": "^1.3.28",
+    "@types/vscode": "^1.62.0",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "@vscode/test-electron": "^1.6.2",
+    "chai": "^4.3.4",
+    "eslint": "^8.1.0",
+    "glob": "^7.2.0",
+    "mocha": "^9.1.3",
+    "prettier": "^2.5.1",
     "proxyquire": "^2.1.0",
-    "sinon": "^7.3.0",
-    "tslint": "^5.1.0",
-    "typescript": "^3.8.3",
-    "vscode": "^1.1.0"
+    "typescript": "^4.5.2",
+    "vscode-test": "^1.6.1"
   }
 }

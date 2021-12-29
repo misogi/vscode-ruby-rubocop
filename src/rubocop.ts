@@ -5,10 +5,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { getConfig, RubocopConfig } from './configuration';
-import * as os from 'os';
+import { ExecFileException } from 'child_process';
 
 export class RubocopAutocorrectProvider
-  implements vscode.DocumentFormattingEditProvider {
+  implements vscode.DocumentFormattingEditProvider
+{
   public provideDocumentFormattingEdits(
     document: vscode.TextDocument
   ): vscode.TextEdit[] {
@@ -19,7 +20,7 @@ export class RubocopAutocorrectProvider
         '--auto-correct',
       ];
       const options = {
-        cwd: getCurrentPath(document.fileName),
+        cwd: getCurrentPath(document.uri),
         input: document.getText(),
       };
       let stdout;
@@ -77,30 +78,26 @@ function isFileUri(uri: vscode.Uri): boolean {
   return uri.scheme === 'file';
 }
 
-function getCurrentPath(fileName: string): string {
-  return vscode.workspace.rootPath || path.dirname(fileName);
+function getCurrentPath(fileUri: vscode.Uri): string {
+  const wsfolder = vscode.workspace.getWorkspaceFolder(fileUri);
+  return (wsfolder && wsfolder.uri.fsPath) || path.dirname(fileUri.fsPath);
 }
 
 // extract argument to an array
 function getCommandArguments(fileName: string): string[] {
-  let commandArguments = [
-    '--stdin',
-    fileName,
-    '--force-exclusion',
-  ];
+  let commandArguments = ['--stdin', fileName, '--force-exclusion'];
   const extensionConfig = getConfig();
   let configs = ['.rubocop.yml']
   if (extensionConfig.configFilePath !== '') {
     configs = [extensionConfig.configFilePath]
       .concat(
-        (vscode.workspace.workspaceFolders || []).map((ws: any) =>
+        (vscode.workspace.workspaceFolders || []).map((ws) =>
           path.join(ws.uri.path, extensionConfig.configFilePath)
         )
       )
   }
 
-  let found = configs.filter((p: string) => fs.existsSync(p));
-
+  const found = configs.filter((p: string) => fs.existsSync(p));
   if (found.length == 0) {
     vscode.window.showWarningMessage(
       `${extensionConfig.configFilePath} file does not exist. Ignoring...`
@@ -145,20 +142,20 @@ export class Rubocop {
 
     const fileName = document.fileName;
     const uri = document.uri;
-    let currentPath = getCurrentPath(fileName);
+    const currentPath = getCurrentPath(uri);
 
-    let onDidExec = (error: Error, stdout: string, stderr: string) => {
+    const onDidExec = (error: Error, stdout: string, stderr: string) => {
       this.reportError(error, stderr);
-      let rubocop = this.parse(stdout);
+      const rubocop = this.parse(stdout);
       if (rubocop === undefined || rubocop === null) {
         return;
       }
 
       this.diag.delete(uri);
 
-      let entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
+      const entries: [vscode.Uri, vscode.Diagnostic[]][] = [];
       rubocop.files.forEach((file: RubocopFile) => {
-        let diagnostics = [];
+        const diagnostics = [];
         file.offenses.forEach((offence: RubocopOffense) => {
           const loc = offence.location;
           const range = new vscode.Range(
@@ -178,11 +175,13 @@ export class Rubocop {
       this.diag.set(entries);
     };
 
-    const jsonOutputFormat = ['--format', 'json']
-    const args = getCommandArguments(fileName).concat(this.additionalArguments).concat(jsonOutputFormat);
+    const jsonOutputFormat = ['--format', 'json'];
+    const args = getCommandArguments(fileName)
+      .concat(this.additionalArguments)
+      .concat(jsonOutputFormat);
 
-    let task = new Task(uri, (token) => {
-      let process = this.executeRubocop(
+    const task = new Task(uri, (token) => {
+      const process = this.executeRubocop(
         args,
         document.getText(),
         { cwd: currentPath },
@@ -207,7 +206,7 @@ export class Rubocop {
   }
 
   public clear(document: vscode.TextDocument): void {
-    let uri = document.uri;
+    const uri = document.uri;
     if (isFileUri(uri)) {
       this.taskQueue.cancel(uri);
       this.diag.delete(uri);
@@ -236,7 +235,7 @@ export class Rubocop {
   private parse(output: string): RubocopOutput | null {
     let rubocop: RubocopOutput;
     if (output.length < 1) {
-      let message = `command ${this.config.command} returns empty output! please check configuration.`;
+      const message = `command ${this.config.command} returns empty output! please check configuration.`;
       vscode.window.showWarningMessage(message);
 
       return null;
@@ -246,9 +245,9 @@ export class Rubocop {
       rubocop = JSON.parse(output);
     } catch (e) {
       if (e instanceof SyntaxError) {
-        let regex = /[\r\n \t]/g;
-        let message = output.replace(regex, ' ');
-        let errorMessage = `Error on parsing output (It might non-JSON output) : "${message}"`;
+        const regex = /[\r\n \t]/g;
+        const message = output.replace(regex, ' ');
+        const errorMessage = `Error on parsing output (It might non-JSON output) : "${message}"`;
         vscode.window.showWarningMessage(errorMessage);
 
         return null;
@@ -259,14 +258,14 @@ export class Rubocop {
   }
 
   // checking rubocop output has error
-  private reportError(error: Error, stderr: string): boolean {
-    let errorOutput = stderr.toString();
-    if (error && (<any>error).code === 'ENOENT') {
+  private reportError(error: ExecFileException, stderr: string): boolean {
+    const errorOutput = stderr.toString();
+    if (error && error.code === 'ENOENT') {
       vscode.window.showWarningMessage(
         `${this.config.command} is not executable`
       );
       return true;
-    } else if (error && (<any>error).code === 127) {
+    } else if (error && error.code === 127) {
       vscode.window.showWarningMessage(stderr);
       return true;
     } else if (errorOutput.length > 0 && !this.config.suppressRubocopWarnings) {
@@ -282,6 +281,7 @@ export class Rubocop {
       case 'refactor':
         return vscode.DiagnosticSeverity.Hint;
       case 'convention':
+      case 'info':
         return vscode.DiagnosticSeverity.Information;
       case 'warning':
         return vscode.DiagnosticSeverity.Warning;

@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import * as cp from 'child_process';
 import * as pq from 'proxyquire';
 import * as vsStub from 'vscode';
 
@@ -11,6 +10,7 @@ vsStub.workspace.getConfiguration = (
   section?: string,
   resource?: vsStub.Uri | null
 ): any => {
+  // FIXME: we should replace only get
   if (section !== 'ruby.rubocop') {
     return _getConfiguration(section, resource);
   }
@@ -24,19 +24,19 @@ vsStub.workspace.getConfiguration = (
   };
 
   return {
-    get: <T>(section: string, defaultValue: T): T =>
+    get: <T>(section: string, defaultValue?: T): T | undefined =>
       defaultConfig[section] || defaultValue,
   };
 };
 
-const childProcessStub: any = {};
+const childProcessStub = { execSync: undefined };
 const extensionConfig = pq('../src/configuration', {
   child_process: childProcessStub,
   vscode: vsStub,
 });
 
-const { RubocopConfig, getConfig } = extensionConfig;
-const canFindBundledCop = () => new Buffer('path/to/bundled/rubocop');
+const { getConfig } = extensionConfig;
+const canFindBundledCop = () => Buffer.from('path/to/bundled/rubocop');
 const cannotFindBundledCop = () => {
   throw new Error('not found');
 };
@@ -67,8 +67,9 @@ describe('RubocopConfig', () => {
 
     describe('.command', () => {
       describe('win32 platform', () => {
+        let originalPlatform: PropertyDescriptor = null;
         beforeEach(() => {
-          this.originalPlatform = Object.getOwnPropertyDescriptor(
+          originalPlatform = Object.getOwnPropertyDescriptor(
             process,
             'platform'
           );
@@ -77,7 +78,7 @@ describe('RubocopConfig', () => {
           });
         });
         afterEach(() => {
-          Object.defineProperty(process, 'platform', this.originalPlatform);
+          Object.defineProperty(process, 'platform', originalPlatform);
         });
 
         it('is set to "bundle exec rubocop.bat" if bundled rubocop is present', () => {
@@ -95,8 +96,9 @@ describe('RubocopConfig', () => {
       });
 
       describe('non-win32 platform', () => {
+        let originalPlatform: PropertyDescriptor = null;
         beforeEach(() => {
-          this.originalPlatform = Object.getOwnPropertyDescriptor(
+          originalPlatform = Object.getOwnPropertyDescriptor(
             process,
             'platform'
           );
@@ -105,7 +107,7 @@ describe('RubocopConfig', () => {
           });
         });
         afterEach(() => {
-          Object.defineProperty(process, 'platform', this.originalPlatform);
+          Object.defineProperty(process, 'platform', originalPlatform);
         });
 
         it('is set to "bundle exec rubocop" if bundled rubocop is present', () => {
