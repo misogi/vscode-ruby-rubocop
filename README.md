@@ -14,10 +14,17 @@ This extension provides interfaces to rubocop for vscode.
 
 ## Problems
 
-This extension may have problems when using a rvm or chruby environment.
-We recommend [vscode-ruby](https://marketplace.visualstudio.com/items?itemName=rebornix.Ruby). It can also lint ruby code.
+- This extension may have problems when using a rvm or chruby environment.
+  We recommend [vscode-ruby](https://marketplace.visualstudio.com/items?itemName=rebornix.Ruby). It can also lint ruby code. _Hint:_ if you use vscode-ruby you may want to remove the following setting, as it conflicts with this extension:
 
-When autoCorrect is enabled, the history of changing file is broken.
+  ```json
+  "ruby.lint": {
+    "rubocop": {
+      "useBundler": true
+    }
+  ```
+
+- When autoCorrect is enabled, the history of changing file is broken.
 
 ## Features
 
