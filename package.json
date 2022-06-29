@@ -71,6 +71,11 @@
           "default": "",
           "description": "execution path of rubocop."
         },
+        "ruby.rubocop.autocorrectArg": {
+          "type": "string",
+          "default": "--auto-correct",
+          "description": "RuboCop argument for autocorrect. Use --auto-correct-all to include unsafe autocorrections."
+        },
         "ruby.rubocop.configFilePath": {
           "type": "string",
           "default": "",

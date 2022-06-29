@@ -6,6 +6,7 @@ import { Rubocop } from './rubocop';
 
 export interface RubocopConfig {
   command: string;
+  autocorrectArg: string;
   onSave: boolean;
   configFilePath: string;
   useBundler: boolean;
@@ -70,6 +71,7 @@ export const getConfig: () => RubocopConfig = () => {
 
   return {
     command,
+    autocorrectArg: conf.get('autocorrectArg', '--auto-correct'),
     configFilePath: conf.get('configFilePath', ''),
     onSave: conf.get('onSave', true),
     useBundler,
