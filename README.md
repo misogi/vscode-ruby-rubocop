@@ -69,8 +69,11 @@ Specify configuration (via navigating to `File > Preferences > Workspace Setting
   // If not specified, it assumes a null value by default.
   "ruby.rubocop.configFilePath": "/path/to/config/.rubocop.yml",
 
-  // default true
+  // default: true
   "ruby.rubocop.onSave": true
+
+  // VSCode command to run after formatting the document. E.g. prettier.forceFormatDocument
+  "ruby.rubocop.postFormatVSCodeCommand": ""
 }
 ```
 

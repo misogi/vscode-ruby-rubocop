@@ -29,7 +29,7 @@ export class RubocopAutocorrectProvider
       } else {
         stdout = cp.execFileSync(config.command, args, options);
       }
-
+      this.runPostFormatVSCodeCommand(config);
       return this.onSuccess(document, stdout);
     } catch (e) {
       // if there are still some offences not fixed RuboCop will return status 1
@@ -40,9 +40,18 @@ export class RubocopAutocorrectProvider
         console.log(e);
         return [];
       } else {
+        this.runPostFormatVSCodeCommand(config);
         return this.onSuccess(document, e.stdout);
       }
     }
+  }
+
+  private runPostFormatVSCodeCommand(config) {
+    if (!config.postFormatVSCodeCommand) return;
+    
+    setTimeout(() => {
+      vscode.commands.executeCommand(config.postFormatVSCodeCommand);
+    }, 50);
   }
 
   // Output of auto-correction looks like this:

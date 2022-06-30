@@ -90,6 +90,11 @@
           "type": "boolean",
           "default": false,
           "description": "Suppress warnings from rubocop and attempt to run regardless. (Useful if you share a rubocop.yml file and run into unrecognized cop errors you know are okay.)"
+        },
+        "ruby.rubocop.postFormatVSCodeCommand": {
+          "type": "string",
+          "default": "",
+          "description": "VSCode command to run after formatting the document. E.g. prettier.forceFormatDocument"
         }
       }
     }
