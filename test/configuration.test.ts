@@ -18,6 +18,7 @@ vsStub.workspace.getConfiguration = (
   const defaultConfig = {
     configfilePath: '',
     executePath: '',
+    autocorrectArg: '--auto-correct',
     onSave: true,
     useBundler: false,
     suppressRubocopWarnings: false,
@@ -133,6 +134,12 @@ describe('RubocopConfig', () => {
       describe('.onSave', () => {
         it('is set', () => {
           expect(getConfig()).to.have.property('onSave');
+        });
+      });
+
+      describe('.autocorrectArg', () => {
+        it('is set', () => {
+          expect(getConfig().autocorrectArg).to.eq('--auto-correct');
         });
       });
     });
