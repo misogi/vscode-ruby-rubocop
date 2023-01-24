@@ -9,6 +9,7 @@ export interface RubocopConfig {
   onSave: boolean;
   configFilePath: string;
   useBundler: boolean;
+  useServer: boolean;
   suppressRubocopWarnings: boolean;
 }
 
@@ -48,6 +49,7 @@ export const getConfig: () => RubocopConfig = () => {
   const cmd = win32 ? 'rubocop.bat' : 'rubocop';
   const conf = vs.workspace.getConfiguration('ruby.rubocop');
   let useBundler = conf.get('useBundler', false);
+  let useServer = conf.get('useServer', false);
   const configPath = conf.get('executePath', '');
   const suppressRubocopWarnings = conf.get('suppressRubocopWarnings', false);
   let command: string;
@@ -73,6 +75,7 @@ export const getConfig: () => RubocopConfig = () => {
     configFilePath: conf.get('configFilePath', ''),
     onSave: conf.get('onSave', true),
     useBundler,
+    useServer,
     suppressRubocopWarnings,
   };
 };

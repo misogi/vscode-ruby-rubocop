@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { Rubocop, RubocopAutocorrectProvider } from './rubocop';
 import { onDidChangeConfiguration } from './configuration';
 
+let rubocop: Rubocop;
+
 // entry point of extension
 export function activate(context: vscode.ExtensionContext): void {
   'use strict';
@@ -9,13 +11,22 @@ export function activate(context: vscode.ExtensionContext): void {
   const diag = vscode.languages.createDiagnosticCollection('ruby');
   context.subscriptions.push(diag);
 
-  const rubocop = new Rubocop(diag);
+  rubocop = new Rubocop(diag);
   const disposable = vscode.commands.registerCommand('ruby.rubocop', () => {
     const document = vscode.window.activeTextEditor.document;
     rubocop.execute(document);
   });
 
   context.subscriptions.push(disposable);
+
+  const restart = vscode.commands.registerCommand(
+    'ruby.rubocop.restart_server',
+    () => {
+      rubocop.restart();
+    }
+  );
+
+  context.subscriptions.push(restart);
 
   const ws = vscode.workspace;
 
@@ -47,4 +58,10 @@ export function activate(context: vscode.ExtensionContext): void {
     'gemfile',
     formattingProvider
   );
+}
+
+export function deactivate(): void {
+  if (rubocop) {
+    rubocop.stop();
+  }
 }

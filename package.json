@@ -53,6 +53,10 @@
       {
         "command": "editor.action.formatDocument",
         "title": "Ruby: autocorrect by rubocop"
+      },
+      {
+        "command": "ruby.rubocop.restart_server",
+        "title": "Ruby: restart rubocop server"
       }
     ],
     "keybindings": [
@@ -85,6 +89,11 @@
           "type": "boolean",
           "default": false,
           "description": "execute rubocop using bundler (ie 'bundle exec rubocop')"
+        },
+        "ruby.rubocop.useServer": {
+          "type": "boolean",
+          "default": false,
+          "description": "execute rubocop in server mode (ie 'rubocop --server')"
         },
         "ruby.rubocop.suppressRubocopWarnings": {
           "type": "boolean",
