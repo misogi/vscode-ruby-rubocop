@@ -20,6 +20,7 @@ vsStub.workspace.getConfiguration = (
     executePath: '',
     onSave: true,
     useBundler: false,
+    useServer: false,
     suppressRubocopWarnings: false,
   };
 

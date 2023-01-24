@@ -87,6 +87,9 @@ function getCurrentPath(fileUri: vscode.Uri): string {
 function getCommandArguments(fileName: string): string[] {
   let commandArguments = ['--stdin', fileName, '--force-exclusion'];
   const extensionConfig = getConfig();
+  if (extensionConfig.useServer) {
+    commandArguments = commandArguments.concat('--server');
+  }
   if (extensionConfig.configFilePath !== '') {
     const found = [extensionConfig.configFilePath]
       .concat(
@@ -209,6 +212,24 @@ export class Rubocop {
     if (isFileUri(uri)) {
       this.taskQueue.cancel(uri);
       this.diag.delete(uri);
+    }
+  }
+
+  public restart(): void {
+    const folders = vscode.workspace.workspaceFolders;
+    if (this.config.useServer && folders && folders.length) {
+      cp.execSync(`${this.config.command} --restart-server`, {
+        cwd: folders[0].uri.fsPath,
+      });
+    }
+  }
+
+  public stop(): void {
+    const folders = vscode.workspace.workspaceFolders;
+    if (this.config.useServer && folders && folders.length) {
+      cp.execSync(`${this.config.command} --stop-server`, {
+        cwd: folders[0].uri.fsPath,
+      });
     }
   }
 
