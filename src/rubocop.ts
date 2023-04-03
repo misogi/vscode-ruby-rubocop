@@ -89,11 +89,7 @@ function getCommandArguments(fileName: string): string[] {
   const extensionConfig = getConfig();
 
   if (extensionConfig.configFilePath !== '') {
-    const expandedConfigFilePath = path.isAbsolute(
-      extensionConfig.configFilePath
-    )
-      ? extensionConfig.configFilePath
-      : path.resolve(extensionConfig.configFilePath);
+    const expandedConfigFilePath = path.resolve(extensionConfig.configFilePath);
 
     const found = [expandedConfigFilePath]
       .concat(
