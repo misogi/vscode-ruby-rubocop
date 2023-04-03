@@ -87,13 +87,18 @@ function getCurrentPath(fileUri: vscode.Uri): string {
 function getCommandArguments(fileName: string): string[] {
   let commandArguments = ['--stdin', fileName, '--force-exclusion'];
   const extensionConfig = getConfig();
+
   if (extensionConfig.configFilePath !== '') {
-    const found = [extensionConfig.configFilePath]
+    const expandedConfigFilePath = path.resolve(extensionConfig.configFilePath);
+
+    const found = [expandedConfigFilePath]
       .concat(
         (vscode.workspace.workspaceFolders || []).map((ws) =>
           path.join(ws.uri.path, extensionConfig.configFilePath)
         )
       )
+      // dedupe
+      .filter((v, i, a) => a.indexOf(v) === i)
       .filter((p: string) => fs.existsSync(p));
 
     if (found.length == 0) {
